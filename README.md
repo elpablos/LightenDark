@@ -10,7 +10,7 @@ Assist aplication for playing game [Darkenlight.net](http://darkenlight:8082/).
 * executing Javascript methods on website
 * Runtime scripting
 * etc.
-* Version
+* Version 1.0.x BETA
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 * [Darkenlight.net](http://darkenlight:8082/)
 
