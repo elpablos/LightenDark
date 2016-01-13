@@ -1,0 +1,180 @@
+﻿<UserControl x:Class="LightenDark.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LightenDark.Views"
+             mc:Ignorable="d" 
+             xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:bhv="clr-namespace:LightenDark.Behaviours"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu IsMainMenu="True">
+            <MenuItem  Header="_Application">
+                <MenuItem Header="_Save messages" Command="{Binding ApplicationCommand}" CommandParameter="SaveMessage" />
+            </MenuItem>
+            <MenuItem Header="_Browser">
+                <MenuItem Header="_Refresh" Command="{Binding BrowserCommand}" CommandParameter="Reload" />
+                <MenuItem Header="_View source" Command="{Binding BrowserCommand}" CommandParameter="Source" />
+                <MenuItem Header="_Developer Tools" Command="{Binding BrowserCommand}" CommandParameter="DevTools" />
+            </MenuItem>
+            <MenuItem Header="_About" />
+        </Menu>
+
+        <xcad:DockingManager x:Name="DockManager"
+                           Grid.Row="1"
+                           AllowMixedOrientation="True"
+                           BorderBrush="Black"
+                           BorderThickness="1">
+            <xcad:DockingManager.Theme>
+                <xcad:MetroTheme />
+            </xcad:DockingManager.Theme>
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding IconSource}" Margin="0,0,4,0"/>
+                        <TextBlock Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+
+            <xcad:LayoutRoot x:Name="_layoutRoot">
+                <xcad:LayoutPanel Orientation="Horizontal">
+
+                    <!-- levy panel -->
+                    <xcad:LayoutAnchorablePaneGroup DockWidth="100">
+                        <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorable ContentId="action" Title="Action">
+                                <StackPanel Orientation="Vertical">
+                                    <Button Content="Log msg" Command="{Binding LogNewCommand}" CommandParameter="Zpráva" />
+                                    <Button Content="Reload" Command="{Binding BrowserCommand}" CommandParameter="Reload" />
+                                    <Button Content="Dev Tools" Command="{Binding BrowserCommand}" CommandParameter="DevTools" />
+                                    <Button Content="View source" Command="{Binding BrowserCommand}" CommandParameter="Source" />
+                                    <Separator/>
+                                    <Button Content="TEST" Command="{Binding TestCommand}" />
+                                    <Button Content="Print connect" Command="{Binding JavacriptCommand}" CommandParameter="console.log(connect.toString());" />
+                                    <Separator/>
+                                    <Button Content="Left" Command="{Binding JavacriptCommand}" CommandParameter="moveLeft();" />
+                                    <Button Content="Right" Command="{Binding JavacriptCommand}" CommandParameter="moveRight();" />
+                                    <Button Content="Top" Command="{Binding JavacriptCommand}" CommandParameter="moveUp();" />
+                                    <Button Content="Down" Command="{Binding JavacriptCommand}" CommandParameter="moveDown();" />
+                                </StackPanel>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
+                    </xcad:LayoutAnchorablePaneGroup>
+
+                    <!-- stred -->
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane>
+                            <xcad:LayoutDocument ContentId="game" Title="Game">
+                                <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0"
+                                      WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"
+                                      Title="{Binding Title, Mode=TwoWay}" />
+                            </xcad:LayoutDocument>
+                        </xcad:LayoutDocumentPane>
+                    </xcad:LayoutDocumentPaneGroup >
+
+                    <!-- pravy -->
+                    <xcad:LayoutAnchorablePaneGroup DockWidth="200">
+                        <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorable ContentId="chat" Title="Chat">
+                                <DataGrid ItemsSource="{Binding Chat}"
+                                      RowHeight="22"
+                                      AutoGenerateColumns="False">
+                                    <DataGrid.ItemContainerStyle>
+                                        <Style TargetType="{x:Type DataGridRow}">
+                                            <Setter Property="Background" Value="{Binding Color}"/>
+                                        </Style>
+                                    </DataGrid.ItemContainerStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Created}" Header="Created" Width="auto" />
+                                        <DataGridTextColumn Binding="{Binding MessageType}" Header="Type" Width="auto" />
+                                        <DataGridTextColumn Binding="{Binding Message}" Header="Message" Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
+                    </xcad:LayoutAnchorablePaneGroup>
+                </xcad:LayoutPanel>
+
+                <!-- bottom -->
+                <xcad:LayoutRoot.BottomSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable ContentId="msg" Title="Message">
+                                <DataGrid ItemsSource="{Binding Messages}"
+                                           RowHeight="22"
+                                           AutoGenerateColumns="False"
+                                           Margin="5, 0, 0, 5">
+                                    <DataGrid.ItemContainerStyle>
+                                        <Style TargetType="{x:Type DataGridRow}">
+                                            <Setter Property="Background" Value="{Binding Color}"/>
+                                        </Style>
+                                    </DataGrid.ItemContainerStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Binding="{Binding Created}" Header="Created" Width="auto" />
+                                        <DataGridTextColumn Binding="{Binding MessageType}" Header="Type" Width="auto" />
+                                        <DataGridTextColumn Binding="{Binding Message}" Header="Message" Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </xcad:LayoutAnchorable>
+                            <xcad:LayoutAnchorable ContentId="consoleContent" Title="Console">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <DataGrid x:Name="ConsoleMessagesGrid"
+                                              ItemsSource="{Binding ConsoleMessages}"
+                                              RowHeight="22"
+                                              AutoGenerateColumns="False"
+                                              Grid.ColumnSpan="2"
+                                              Margin="5, 0, 0, 5">
+                                        <DataGrid.ItemContainerStyle>
+                                            <Style TargetType="{x:Type DataGridRow}">
+                                                <Setter Property="Background" Value="{Binding Color}"/>
+                                            </Style>
+                                        </DataGrid.ItemContainerStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Created}" Header="Created" Width="auto" />
+                                            <DataGridTextColumn Binding="{Binding CommandMessage}" Header="Command Message" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                    <TextBox x:Name="txtConsole" Grid.Column="0" Grid.Row="1" Text="{Binding ConsoleMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Button Content="Send" Grid.Column="1" Grid.Row="1" Command="{Binding JavacriptCommand}" CommandParameter="{Binding Text, ElementName=txtConsole}" Width="100" Margin="5, 0, 0, 0" />
+                                </Grid>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.BottomSide>
+
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+
+        <!-- statusbar - bottom -->
+        <StatusBar Grid.Row="2">
+            <ProgressBar HorizontalAlignment="Right"
+                         IsIndeterminate="{Binding WebBrowser.IsLoading}"
+                         Width="100"
+                         Height="16"
+                         Margin="3" />
+            <Separator />
+            <TextBlock />
+        </StatusBar>
+    </Grid>
+</UserControl>
