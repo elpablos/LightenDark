@@ -1,4 +1,4 @@
-# README #
+# LightenDark #
 
 Assist aplication for playing game [Darkenlight.net](http://darkenlight:8082/).
 
