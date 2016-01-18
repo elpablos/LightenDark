@@ -6,6 +6,8 @@ if (typeof log == "undefined") { log = function () { } };
 
 if (ws) {
     console.log("ws exists!");
+} else {
+    console.log("ws NOT exists!");
 }
 
 /*

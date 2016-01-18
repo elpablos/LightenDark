@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
 
-namespace LightenDark.Interop
+namespace LightenDark.Api.Core
 {
     public sealed class DynamicJsonConverter : JavaScriptConverter
     {

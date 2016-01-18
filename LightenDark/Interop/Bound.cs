@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using LightenDark.Api.Enums;
 using LightenDark.Interfaces;
 
 namespace LightenDark.Interop
@@ -22,7 +23,7 @@ namespace LightenDark.Interop
         /// <param name="data"></param>
         public void LogWebSocketData(string data)
         {
-            Vm.LogNewAction(ViewModels.MessageType.In, data);
+            Vm.LogNewAction(ApplicationMessageType.In, data);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace LightenDark.Interop
         /// <param name="data"></param>
         public void LogWebSocketSend(string data)
         {
-            Vm.LogNewAction(ViewModels.MessageType.Out, data);
+            Vm.LogNewAction(ApplicationMessageType.Out, data);
         }
 
         public void OnSelected(string selected)
@@ -41,7 +42,7 @@ namespace LightenDark.Interop
 
         public void OnDocumentReady()
         {
-            Vm.LogNewAction(ViewModels.MessageType.Console, "DocumentReady");
+            Vm.LogNewAction(ApplicationMessageType.Console, "DocumentReady");
         }
     }
 }

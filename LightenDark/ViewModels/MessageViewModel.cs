@@ -2,17 +2,10 @@
 using LightenDark.Core;
 using System.ComponentModel;
 using System.Windows.Media;
+using LightenDark.Api.Enums;
 
 namespace LightenDark.ViewModels
 {
-    public enum MessageType
-    {
-        In,
-        Out,
-        App,
-        Console
-    }
-
     public class MessageViewModel : INotifyPropertyChanged
     {
         #region Events
@@ -44,8 +37,8 @@ namespace LightenDark.ViewModels
             set { PropertyChanged.ChangeAndNotify(ref _Created, value, () => Created); }
         }
 
-        private MessageType _MessageType;
-        public MessageType MessageType
+        private ApplicationMessageType _MessageType;
+        public ApplicationMessageType MessageType
         {
             get { return _MessageType; }
             set { PropertyChanged.ChangeAndNotify(ref _MessageType, value, () => MessageType); }
@@ -83,21 +76,21 @@ namespace LightenDark.ViewModels
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Brush GetBrushByType(MessageType type)
+        public static Brush GetBrushByType(ApplicationMessageType type)
         {
             Brush brush = null;
             switch (type)
             {
-                case MessageType.In:
+                case ApplicationMessageType.In:
                     brush = Brushes.LightSalmon;
                     break;
-                case MessageType.Out:
+                case ApplicationMessageType.Out:
                     brush = Brushes.LightGreen;
                     break;
-                case MessageType.App:
+                case ApplicationMessageType.App:
                     brush = Brushes.LightBlue;
                     break;
-                case MessageType.Console:
+                case ApplicationMessageType.Console:
                     brush = Brushes.LightGray;
                     break;
                 default:

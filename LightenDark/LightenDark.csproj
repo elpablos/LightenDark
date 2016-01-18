@@ -143,8 +143,7 @@
     </None>
     <Compile Include="Interfaces\IMainViewModel.cs" />
     <Compile Include="Interop\Bound.cs" />
-    <Compile Include="Interop\DynamicJsonConverter.cs" />
-    <Compile Include="Interop\MessageTypeEnum.cs" />
+    <Compile Include="Interop\Compiler.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\CommandMessageViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -199,6 +198,12 @@
     <None Include="IncludeLoginBefore.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LightenDark.Api\LightenDark.Api.csproj">
+      <Project>{b83e6f92-0fb6-4e0b-a62b-37316d2b061f}</Project>
+      <Name>LightenDark.Api</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\cef.redist.x64.3.2454.1344\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2454.1344\build\cef.redist.x64.targets')" />

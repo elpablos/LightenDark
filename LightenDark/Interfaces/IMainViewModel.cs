@@ -1,5 +1,8 @@
 ﻿using CefSharp.Wpf;
+using LightenDark.Api.Args;
+using LightenDark.Api.Enums;
 using LightenDark.ViewModels;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -12,6 +15,7 @@ namespace LightenDark.Interfaces
     public interface IMainViewModel
     {
         event PropertyChangedEventHandler PropertyChanged;
+        event EventHandler<MessageEventArgs> MessageIncome;
 
         IWpfWebBrowser WebBrowser { get; set; }
 
@@ -25,7 +29,7 @@ namespace LightenDark.Interfaces
 
         ICommand JavacriptCommand { get; }
 
-        void LogNewAction(MessageType type, string msg);
+        void LogNewAction(ApplicationMessageType type, string msg);
 
     }
 }
