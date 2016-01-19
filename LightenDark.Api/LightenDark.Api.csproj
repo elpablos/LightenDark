@@ -50,7 +50,6 @@
     <Compile Include="Interfaces\IScript.cs" />
     <Compile Include="Scripts\CraftScript.cs" />
     <Compile Include="Scripts\MiningScript.cs" />
-    <Compile Include="sdff.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messages\" />
