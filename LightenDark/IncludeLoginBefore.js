@@ -36,9 +36,17 @@ function connect() {
         //  requestLogin(16);
     };
     ws.onmessage = function (event) {
-        // log('Received: ' + event.data);7
+        // log('Received: ' + event.data);
         bound.logWebSocketData(event.data);
-        processMessage(event.data);
+        var msg = JSON.parse(event.data);
+        //Ulozim do fronty pokud to neni login
+        //  if (messageCounter > 5 && msg.t != 32) {
+        //    messageQueue.push(msg);
+        //    messageCounter++;
+        //  } else {
+        processMessage(msg);
+        //    messageCounter++;
+        //   }
     };
     ws.onclose = function () {
         log('Info: WebSocket connection closed.');
