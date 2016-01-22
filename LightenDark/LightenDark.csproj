@@ -200,7 +200,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LightenDark.Api\LightenDark.Api.csproj">
+    <ProjectReference Include="..\LightenDark.ApiOld\LightenDark.Api.csproj">
       <Project>{b83e6f92-0fb6-4e0b-a62b-37316d2b061f}</Project>
       <Name>LightenDark.Api</Name>
     </ProjectReference>

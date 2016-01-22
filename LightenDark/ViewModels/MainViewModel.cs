@@ -28,6 +28,9 @@ namespace LightenDark.ViewModels
         private IScript script;
         private RuntimeCompiler compiler;
 
+        private IScript miningScript;
+        private IScript mageryScript;
+
         #endregion
 
         #region Events
@@ -174,6 +177,11 @@ namespace LightenDark.ViewModels
             _Chat = new ObservableCollection<ChatViewModel>();
 
             compiler = new RuntimeCompiler();
+            mageryScript = new Api.Scripts.MageryScript();
+            mageryScript.Core = this;
+            miningScript = new Api.Scripts.MiningScript();
+            miningScript.Core = this;
+            script = miningScript;
         }
 
         #endregion
@@ -197,9 +205,26 @@ namespace LightenDark.ViewModels
                     case "Compile":
                         CompileCsScript();
                         break;
+                    case "Switch":
+                        SwitchScript();
+                        break;
                     default:
                         break;
                 }
+            }
+        }
+
+        private void SwitchScript()
+        {
+            if (script == miningScript)
+            {
+                script = mageryScript;
+                LogNewAction(ApplicationMessageType.App, "Změna na mageryScript!");
+            }
+            else
+            {
+                script = miningScript;
+                LogNewAction(ApplicationMessageType.App, "Změna na miningScript!");
             }
         }
 
@@ -275,7 +300,7 @@ namespace LightenDark.ViewModels
                         Message = obj.text
                     };
                 }
-                else if (obj.t == (int)IncomingMessageType.System || obj.t == (int)IncomingMessageType.PlayerPosition)
+                else if (obj.t == (int)IncomingMessageType.System || obj.t == (int)IncomingMessageType.PlayerPosition || obj.t == 14 || obj.t== 10)
                 {
                     if (MessageIncome != null)
                     {
@@ -412,7 +437,7 @@ namespace LightenDark.ViewModels
                 e.Browser != null
                 && e.Browser.MainFrame != null
                 && !string.IsNullOrEmpty(e.Browser.MainFrame.Url)
-                && e.IsLoading
+                && !e.IsLoading
                 && !isIncludeLoginBefore
                 )
             {

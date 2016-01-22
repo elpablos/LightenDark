@@ -59,7 +59,7 @@
                                     <Button Content="Dev Tools" Command="{Binding BrowserCommand}" CommandParameter="DevTools" />
                                     <Button Content="View source" Command="{Binding BrowserCommand}" CommandParameter="Source" />
                                     <Separator/>
-                                    <Button Content="TEST" Command="{Binding TestCommand}" />
+                                    <Button Content="TEST" Command="{Binding ApplicationCommand}" CommandParameter="Switch" />
                                     <Button Content="Compile" Command="{Binding ApplicationCommand}" CommandParameter="Compile" />
                                     <Button Content="Start" Command="{Binding TestCommand}" CommandParameter="start" />
                                     <Button Content="Stop" Command="{Binding TestCommand}" CommandParameter="stop" />
