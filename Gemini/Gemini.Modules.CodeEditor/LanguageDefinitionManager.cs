@@ -38,25 +38,25 @@ namespace Gemini.Modules.CodeEditor
             var languageDefinitions = new List<ILanguageDefinition>
                 {
                     new DefaultLanguageDefinition("C#", new[] {".cs"}),
-                    new DefaultLanguageDefinition("JavaScript", new[] {".js"}),
-                    new DefaultLanguageDefinition("HTML", new[] {".htm", ".html"}),
-                    new DefaultLanguageDefinition("ASP/XHTML",
-                                                  new[] {".asp", ".aspx", ".asax", ".asmx", ".ascx", ".master"}),
-                    new DefaultLanguageDefinition("Boo", new[] {".boo"}),
-                    new DefaultLanguageDefinition("Coco", new[] {".atg"}),
-                    new DefaultLanguageDefinition("CSS", new[] {".css"}),
-                    new DefaultLanguageDefinition("C++", new[] {".c", ".h", ".cc", ".cpp", ".hpp"}),
-                    new DefaultLanguageDefinition("Java", new[] {".java"}),
-                    new DefaultLanguageDefinition("Patch", new[] {".patch", ".diff"}),
-                    new DefaultLanguageDefinition("PowerShell", new[] {".ps1", ".psm1", ".psd1"}),
-                    new DefaultLanguageDefinition("PHP", new[] {".php"}),
-                    new DefaultLanguageDefinition("TeX", new[] {".tex"}),
-                    new DefaultLanguageDefinition("VBNET", new[] {".vb"}),
-                    new DefaultLanguageDefinition("XML", (".xml;.xsl;.xslt;.xsd;.manifest;.config;.addin;" +
-                                                          ".xshd;.wxs;.wxi;.wxl;.proj;.csproj;.vbproj;.ilproj;" +
-                                                          ".booproj;.build;.xfrm;.targets;.xaml;.xpt;" +
-                                                          ".xft;.map;.wsdl;.disco;.ps1xml;.nuspec").Split(';')),
-                    new DefaultLanguageDefinition("MarkDown", new[] {".md"}),
+                    //new DefaultLanguageDefinition("JavaScript", new[] {".js"}),
+                    //new DefaultLanguageDefinition("HTML", new[] {".htm", ".html"}),
+                    //new DefaultLanguageDefinition("ASP/XHTML",
+                    //                              new[] {".asp", ".aspx", ".asax", ".asmx", ".ascx", ".master"}),
+                    //new DefaultLanguageDefinition("Boo", new[] {".boo"}),
+                    //new DefaultLanguageDefinition("Coco", new[] {".atg"}),
+                    //new DefaultLanguageDefinition("CSS", new[] {".css"}),
+                    //new DefaultLanguageDefinition("C++", new[] {".c", ".h", ".cc", ".cpp", ".hpp"}),
+                    //new DefaultLanguageDefinition("Java", new[] {".java"}),
+                    //new DefaultLanguageDefinition("Patch", new[] {".patch", ".diff"}),
+                    //new DefaultLanguageDefinition("PowerShell", new[] {".ps1", ".psm1", ".psd1"}),
+                    //new DefaultLanguageDefinition("PHP", new[] {".php"}),
+                    //new DefaultLanguageDefinition("TeX", new[] {".tex"}),
+                    //new DefaultLanguageDefinition("VBNET", new[] {".vb"}),
+                    //new DefaultLanguageDefinition("XML", (".xml;.xsl;.xslt;.xsd;.manifest;.config;.addin;" +
+                    //                                      ".xshd;.wxs;.wxi;.wxl;.proj;.csproj;.vbproj;.ilproj;" +
+                    //                                      ".booproj;.build;.xfrm;.targets;.xaml;.xpt;" +
+                    //                                      ".xft;.map;.wsdl;.disco;.ps1xml;.nuspec").Split(';')),
+                    //new DefaultLanguageDefinition("MarkDown", new[] {".md"}),
                 };
 
             // Add imported definitions

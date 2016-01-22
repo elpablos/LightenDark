@@ -42,6 +42,7 @@ namespace Gemini.Modules.CodeEditor.ViewModels
         protected override void OnViewLoaded(object view)
         {
             _view = (ICodeEditorView) view;
+            ApplyOriginalText();
         }
 
         public override bool Equals(object obj)
