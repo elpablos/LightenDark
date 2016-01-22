@@ -60,7 +60,13 @@ namespace Gemini.Modules.Shell.Controls
         private static LayoutAnchorablePane CreateAnchorablePane(LayoutRoot layout, Orientation orientation,
             string paneName, InsertPosition position)
         {
-            var parent = layout.Descendents().OfType<LayoutPanel>().First(d => d.Orientation == orientation);
+            // Elpablos edit: First > FirstOrDefault
+            var parent = layout.Descendents().OfType<LayoutPanel>().FirstOrDefault(d => d.Orientation == orientation);
+            // Elpablos  edit inserted if clausule
+            if (parent == null)
+            {
+                parent = layout.Descendents().OfType<LayoutPanel>().FirstOrDefault();
+            }
             var toolsPane = new LayoutAnchorablePane { Name = paneName };
             if (position == InsertPosition.Start)
                 parent.InsertChildAt(0, toolsPane);
