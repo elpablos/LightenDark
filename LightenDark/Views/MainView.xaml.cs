@@ -34,17 +34,6 @@ namespace LightenDark.Views
                 vm.ConsoleMessage = txtConsole.Text;
                 vm.JavacriptAction(txtConsole.Text);
                 txtConsole.Focus();
-                // txtConsole.Text = string.Empty;
-
-                if (ConsoleMessagesGrid.Items.Count > 0)
-                {
-                    var border = System.Windows.Media.VisualTreeHelper.GetChild(ConsoleMessagesGrid, 0) as Decorator;
-                    if (border != null)
-                    {
-                        var scroll = border.Child as ScrollViewer;
-                        if (scroll != null) scroll.ScrollToEnd();
-                    }
-                }
             }
         }
     }

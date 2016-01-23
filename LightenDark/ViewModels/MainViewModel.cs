@@ -11,21 +11,32 @@ using LightenDark.Interfaces;
 using LightenDark.Interop;
 using System.Text;
 using System.Web.Script.Serialization;
+using LightenDark.Api.Interfaces;
+using LightenDark.Api.Args;
+using LightenDark.Api.Enums;
+using LightenDark.Api.Core;
 
 namespace LightenDark.ViewModels
 {
-    public class MainViewModel : IMainViewModel, INotifyPropertyChanged
+    public class MainViewModel : IMainViewModel, ICore, INotifyPropertyChanged
     {
         #region Fields
 
         private bool isIncludeStartAfter;
         private bool isIncludeLoginBefore;
 
+        private IScript script;
+        private RuntimeCompiler compiler;
+
+        private IScript miningScript;
+        private IScript mageryScript;
+
         #endregion
 
         #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<MessageEventArgs> MessageIncome;
 
         #endregion
 
@@ -70,6 +81,13 @@ namespace LightenDark.ViewModels
             get { return _Chat; }
         }
 
+        private string csScript;
+        public string CsScript
+        {
+            get { return csScript; }
+            set { PropertyChanged.ChangeAndNotify(ref csScript, value, () => CsScript); }
+        }
+
         #endregion
 
         #region Commands
@@ -82,7 +100,7 @@ namespace LightenDark.ViewModels
                 if (_LogNewCommand == null)
                 {
                     _LogNewCommand = new RelayCommands(
-                        param => LogNewAction(MessageType.App, param.ToString()));
+                        param => LogNewAction(ApplicationMessageType.App, param.ToString()));
                 }
                 return _LogNewCommand;
             }
@@ -157,6 +175,13 @@ namespace LightenDark.ViewModels
             messages = new ObservableCollection<MessageViewModel>();
             _ConsoleMessages = new ObservableCollection<ConsoleMessageViewModel>();
             _Chat = new ObservableCollection<ChatViewModel>();
+
+            compiler = new RuntimeCompiler();
+            mageryScript = new Api.Scripts.MageryScript();
+            mageryScript.Core = this;
+            miningScript = new Api.Scripts.MiningScript();
+            miningScript.Core = this;
+            script = miningScript;
         }
 
         #endregion
@@ -177,10 +202,43 @@ namespace LightenDark.ViewModels
                     case "SaveMessage":
                         SaveMessage();
                         break;
+                    case "Compile":
+                        CompileCsScript();
+                        break;
+                    case "Switch":
+                        SwitchScript();
+                        break;
                     default:
                         break;
                 }
             }
+        }
+
+        private void SwitchScript()
+        {
+            if (script == miningScript)
+            {
+                script = mageryScript;
+                LogNewAction(ApplicationMessageType.App, "Změna na mageryScript!");
+            }
+            else
+            {
+                script = miningScript;
+                LogNewAction(ApplicationMessageType.App, "Změna na miningScript!");
+            }
+        }
+
+        private void CompileCsScript()
+        {
+            script = compiler.Compile(CsScript, this);
+            if (script == null)
+            {
+                foreach (var err in compiler.Errors)
+                {
+                    LogNewAction(ApplicationMessageType.Console, string.Format("line {0}: {1}", err.Line, err.ErrorText));
+                }
+            }
+
         }
 
         /// <summary>
@@ -189,14 +247,26 @@ namespace LightenDark.ViewModels
         /// <param name="obj"></param>
         public void TestAction(object obj)
         {
-           
+            if (obj != null)
+            {
+                string msg = obj.ToString();
+                if (msg == "start")
+                {
+                    script.Start();
+                }
+                else
+                {
+                    script.Stop();
+                }
+            }
+
         }
 
         /// <summary>
         /// Logovani zpravy
         /// </summary>
         /// <param name="obj"></param>
-        public void LogNewAction(MessageType type, string msg)
+        public void LogNewAction(ApplicationMessageType type, string msg)
         {
             var message = new MessageViewModel()
             {
@@ -207,22 +277,39 @@ namespace LightenDark.ViewModels
             };
 
             ChatViewModel chat = null;
-            
 
-            if (message.MessageType == MessageType.In)
+            if (type == ApplicationMessageType.Console)
+            {
+
+            }
+
+            if (message.MessageType == ApplicationMessageType.In)
             {
                 var serializer = new JavaScriptSerializer();
                 serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
 
                 dynamic obj = serializer.Deserialize(message.Message, typeof(object));
-                if (obj.t == (int)MessageTypeEnum.Chat)
+                if (obj.t == (int)IncomingMessageType.Chat)
                 {
+                    ChatType chatType = ChatViewModel.GetChatType(obj.tp);
                     chat = new ChatViewModel()
                     {
-                        Color = ChatViewModel.GetBrushByType(obj.tp),
+                        Color = ChatViewModel.GetBrush(chatType),
+                        Type = chatType,
                         Created = DateTime.Now,
-                        CommandMessage = obj.text
+                        Message = obj.text
                     };
+                }
+                else if (obj.t == (int)IncomingMessageType.System || obj.t == (int)IncomingMessageType.PlayerPosition || obj.t == 14 || obj.t== 10)
+                {
+                    if (MessageIncome != null)
+                    {
+                        MessageIncome(this, new MessageEventArgs()
+                        {
+                            Type = obj.t,
+                            Message = msg
+                        });
+                    }
                 }
             }
 
@@ -234,7 +321,7 @@ namespace LightenDark.ViewModels
 
                 if (chat != null)
                 {
-                    Chat.Add(chat); // TOOD null CHAT!
+                    Chat.Insert(0, chat);
                 }
 
             });
@@ -278,11 +365,16 @@ namespace LightenDark.ViewModels
             var browser = WebBrowser.GetBrowser();
             browser.MainFrame.ExecuteJavaScriptAsync(param.ToString());
 
-            ConsoleMessages.Add(new ConsoleMessageViewModel()
+            ConsoleMessageViewModel msg = new ConsoleMessageViewModel()
             {
                 Color = System.Windows.Media.Brushes.LightGoldenrodYellow,
                 CommandMessage = param.ToString(),
                 Created = DateTime.Now
+            };
+
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                ConsoleMessages.Insert(0, msg);
             });
 
             ConsoleMessage = string.Empty;
@@ -321,6 +413,14 @@ namespace LightenDark.ViewModels
 
                     var obj = new BoundClass(this);
                     WebBrowser.RegisterJsObject("bound", obj);
+                    //if (WebBrowser is ChromiumWebBrowser)
+                    //{
+                    //    var browser = webBrowser as ChromiumWebBrowser;
+                    //    browser.BrowserSettings = new BrowserSettings()
+                    //    {
+                    //        ApplicationCache = CefState.Enabled
+                    //    };
+                    //}
                 }
             }
         }
@@ -332,7 +432,7 @@ namespace LightenDark.ViewModels
         /// <param name="e"></param>
         private void WebBrowser_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
         {
-            LogNewAction(MessageType.App, "LoadingState: " + e.IsLoading);
+            LogNewAction(ApplicationMessageType.App, "LoadingState: " + e.IsLoading);
             if (
                 e.Browser != null
                 && e.Browser.MainFrame != null
@@ -341,7 +441,7 @@ namespace LightenDark.ViewModels
                 && !isIncludeLoginBefore
                 )
             {
-                LogNewAction(MessageType.App, "Načítám JS IncludeLoginBefore.js");
+                LogNewAction(ApplicationMessageType.App, "Načítám JS IncludeLoginBefore.js");
                 string script = System.IO.File.ReadAllText(
                     System.IO.Path.Combine(Environment.CurrentDirectory,
                     "IncludeLoginBefore.js"));
@@ -360,12 +460,12 @@ namespace LightenDark.ViewModels
         /// <param name="e"></param>
         private void OnWebBrowserConsoleMessage(object sender, ConsoleMessageEventArgs e)
         {
-            LogNewAction(MessageType.Console, e.Message);
+            LogNewAction(ApplicationMessageType.Console, e.Message);
 
             // po startu hry se objeví v konzoli Pixi.js, možnost registrace dalších skriptů
             if (!isIncludeStartAfter && e.Message.Contains("Pixi.js"))
             {
-                LogNewAction(MessageType.App, "Načítám JS IncludeStartAfter.js");
+                LogNewAction(ApplicationMessageType.App, "Načítám JS IncludeStartAfter.js");
                 string script = System.IO.File.ReadAllText(
                     System.IO.Path.Combine(Environment.CurrentDirectory,
                     "IncludeStartAfter.js"));
@@ -383,7 +483,7 @@ namespace LightenDark.ViewModels
         /// <param name="e"></param>
         private void OnWebBrowserStatusMessage(object sender, StatusMessageEventArgs e)
         {
-            LogNewAction(MessageType.App, string.Format("WebBrowserStatus: '{0}'", e.Value));
+            LogNewAction(ApplicationMessageType.App, string.Format("WebBrowserStatus: '{0}'", e.Value));
         }
 
         /// <summary>
