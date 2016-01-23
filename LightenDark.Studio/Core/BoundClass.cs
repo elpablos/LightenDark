@@ -25,12 +25,15 @@ namespace LightenDark.Studio.Core
         [JavascriptIgnore]
         public IErrorList ErrorList { get; set; }
 
+        public event EventHandler<BoundEventArgs> BoundMessageHandler = delegate { };
+
         /// <summary>
         /// Write incoming message from Javascript to C# 
         /// </summary>
         /// <param name="data"></param>
         public void LogWebSocketData(string data)
         {
+            BoundMessageHandler(this, new BoundEventArgs(BoundEnum.In, data));
             OutputModule.AppendLine("IN: " + data);
         }
 
@@ -40,7 +43,21 @@ namespace LightenDark.Studio.Core
         /// <param name="data"></param>
         public void LogWebSocketSend(string data)
         {
+            BoundMessageHandler(this, new BoundEventArgs(BoundEnum.Out, data));
             OutputModule.AppendLine("OUT: "+ data);
+        }
+    }
+
+    public class BoundEventArgs
+    {
+        public BoundEnum BoundType { get; }
+
+        public string Message { get; }
+
+        public BoundEventArgs(BoundEnum boundType, string message)
+        {
+            BoundType = boundType;
+            Message = message;
         }
     }
 }

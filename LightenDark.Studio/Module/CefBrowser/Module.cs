@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
 using Gemini.Framework;
 using LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels;
+using LightenDark.Studio.Module.ScriptManager;
+using LightenDark.Studio.Module.ScriptManager.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -18,7 +20,9 @@ namespace LightenDark.Studio.Module.CefBrowser
     {
         public override void PostInitialize()
         {
-            Shell.OpenDocument(IoC.Get<CefBrowserViewModel>());
+            Shell.OpenDocument(IoC.Get<ICefBrowserViewModel>());
+
+            Shell.ShowTool(IoC.Get<IScriptManager>());
         }
     }
 }

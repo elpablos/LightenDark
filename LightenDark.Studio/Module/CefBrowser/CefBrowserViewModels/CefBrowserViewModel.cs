@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 {
-    [Export(typeof(CefBrowserViewModel))]
-    public class CefBrowserViewModel : Document
+    [Export(typeof(ICefBrowserViewModel))]
+    public class CefBrowserViewModel : Document, ICefBrowserViewModel
     {
         #region Fields
 
@@ -77,6 +77,12 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         #endregion
 
         #region Actions
+
+        public void ExecuteJavaScriptAsync(string message)
+        {
+            var browser = WebBrowser.GetBrowser();
+            browser.MainFrame.ExecuteJavaScriptAsync(message);
+        }
 
         #endregion
 
