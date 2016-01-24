@@ -126,4 +126,31 @@
   <data name="CloseDialog_Title" xml:space="preserve">
     <value>Closing dialog</value>
   </data>
+  <data name="Menu_Browser_DeveloperTool_Text" xml:space="preserve">
+    <value>Developer tools</value>
+  </data>
+  <data name="Menu_Browser_DeveloperTool_ToolTip" xml:space="preserve">
+    <value>Developer tools</value>
+  </data>
+  <data name="Menu_Browser_Reload_Text" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="Menu_Browser_Reload_ToolTip" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="Menu_Browser_SourceCode_Text" xml:space="preserve">
+    <value>View source code</value>
+  </data>
+  <data name="Menu_Browser_SourceCode_ToolTip" xml:space="preserve">
+    <value>View source code</value>
+  </data>
+  <data name="ViewBrowserText" xml:space="preserve">
+    <value>_Browser</value>
+  </data>
+  <data name="ViewConsoleCommandText" xml:space="preserve">
+    <value>_Console</value>
+  </data>
+  <data name="ViewConsoleCommandToolTip" xml:space="preserve">
+    <value>Console</value>
+  </data>
 </root>

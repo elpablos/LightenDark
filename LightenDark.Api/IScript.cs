@@ -25,11 +25,11 @@ namespace LightenDark.Api
         /// <summary>
         /// Main loop
         /// </summary>
-        void Run();
+        void Start();
 
         /// <summary>
         /// Stop the loop
         /// </summary>
-        void Stop();
+        void Stop(bool isForce = false);
     }
 }

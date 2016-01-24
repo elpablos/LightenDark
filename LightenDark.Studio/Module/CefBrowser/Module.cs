@@ -23,6 +23,15 @@ namespace LightenDark.Studio.Module.CefBrowser
             Shell.OpenDocument(IoC.Get<ICefBrowserViewModel>());
 
             Shell.ShowTool(IoC.Get<IScriptManager>());
+
+            var manager = IoC.Get<IScriptManager>();
+
+#if DEBUG
+
+            var sample = new GeminiTester.Scripts.MiningScript();
+            manager.Items.Add(sample);
+            manager.SelectedItem = sample;
+#endif
         }
     }
 }
