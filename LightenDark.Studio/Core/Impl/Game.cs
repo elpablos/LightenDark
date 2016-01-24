@@ -1,5 +1,8 @@
-﻿using LightenDark.Api.Args;
+﻿using Gemini.Modules.Output;
+using Gemini.Modules.PropertyGrid;
+using LightenDark.Api.Args;
 using LightenDark.Api.Interfaces;
+using LightenDark.Module.Console;
 using LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,6 +21,9 @@ namespace LightenDark.Studio.Core.Impl
         public IWorld World { get; set; }
 
         [Import]
+        public IOutput Output { get; set; }
+
+        [Import]
         public IBoundClass BoundClass { get; set; }
 
         private ICefBrowserViewModel browser;
@@ -32,18 +38,23 @@ namespace LightenDark.Studio.Core.Impl
             }
         }
 
+        [ImportingConstructor]
+        public Game(IPropertyGrid propertyGrid)
+        {
+            propertyGrid.SelectedObject = this;
+            Player = new Player(this);
+            World = new World(this);
+        }
+
         private void OnBrowserBound()
         {
             BoundClass.BoundMessageHandler += BoundClass_BoundMessageHandler;
         }
 
-        public Game()
-        {
-            //BoundClass = boundClass;
-            
-            Player = new Player(this);
-            World = new World(this);
-        }
+        //public Game()
+        //{
+     
+        //}
 
         /// <summary>
         /// Resend only incoming message
@@ -63,6 +74,11 @@ namespace LightenDark.Studio.Core.Impl
         public void SendJavaScript(string message)
         {
             Browser.ExecuteJavaScriptAsync(message);
+        }
+
+        public void OutputWrite(string message)
+        {
+            Output.AppendLine(message);
         }
     }
 }

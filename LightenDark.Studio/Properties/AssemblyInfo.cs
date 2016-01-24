@@ -9,7 +9,7 @@ using System.Windows.Markup;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LightenDark.Studio")]
-[assembly: AssemblyDescription("LightenDark is assistant program like Yoko in UO.")]
+[assembly: AssemblyDescription("LightenDark is assistant program with C# scripting for game DarkenLight.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Lorenzo.cz")]
 [assembly: AssemblyProduct("LightenDark.Studio")]

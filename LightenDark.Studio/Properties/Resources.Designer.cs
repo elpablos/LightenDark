@@ -86,5 +86,86 @@ namespace LightenDark.Studio.Properties {
                 return ResourceManager.GetString("CloseDialog_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developer tools.
+        /// </summary>
+        public static string Menu_Browser_DeveloperTool_Text {
+            get {
+                return ResourceManager.GetString("Menu_Browser_DeveloperTool_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Developer tools.
+        /// </summary>
+        public static string Menu_Browser_DeveloperTool_ToolTip {
+            get {
+                return ResourceManager.GetString("Menu_Browser_DeveloperTool_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string Menu_Browser_Reload_Text {
+            get {
+                return ResourceManager.GetString("Menu_Browser_Reload_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string Menu_Browser_Reload_ToolTip {
+            get {
+                return ResourceManager.GetString("Menu_Browser_Reload_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View source code.
+        /// </summary>
+        public static string Menu_Browser_SourceCode_Text {
+            get {
+                return ResourceManager.GetString("Menu_Browser_SourceCode_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View source code.
+        /// </summary>
+        public static string Menu_Browser_SourceCode_ToolTip {
+            get {
+                return ResourceManager.GetString("Menu_Browser_SourceCode_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Browser.
+        /// </summary>
+        public static string ViewBrowserText {
+            get {
+                return ResourceManager.GetString("ViewBrowserText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Console.
+        /// </summary>
+        public static string ViewConsoleCommandText {
+            get {
+                return ResourceManager.GetString("ViewConsoleCommandText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Console.
+        /// </summary>
+        public static string ViewConsoleCommandToolTip {
+            get {
+                return ResourceManager.GetString("ViewConsoleCommandToolTip", resourceCulture);
+            }
+        }
     }
 }

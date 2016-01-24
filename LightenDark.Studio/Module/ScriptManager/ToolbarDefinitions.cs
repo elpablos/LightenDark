@@ -14,7 +14,7 @@ namespace LightenDark.Studio.Module.ScriptManager
 
         [Export]
         public static ToolBarItemGroupDefinition CompilerToolBarGroup = new ToolBarItemGroupDefinition(
-            ToolbarDefinitions.CompilerToolBar, 8);
+            ToolbarDefinitions.CompilerToolBar, 1);
 
         [Export]
         public static ToolBarItemDefinition CompileScriptCommandItem = new CommandToolBarItemDefinition<CompileScriptCommandDefinition>(
@@ -23,5 +23,9 @@ namespace LightenDark.Studio.Module.ScriptManager
         [Export]
         public static ToolBarItemDefinition ExecuteScriptCommandItem = new CommandToolBarItemDefinition<ExecuteScriptCommandDefinition>(
             CompilerToolBarGroup, 1);
+
+        [Export]
+        public static ToolBarItemDefinition StopScriptCommandItem = new CommandToolBarItemDefinition<StopScriptCommandDefinition>(
+            CompilerToolBarGroup, 2);
     }
 }

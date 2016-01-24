@@ -1,8 +1,13 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
 using Gemini.Framework;
+using Gemini.Framework.Commands;
+using Gemini.Framework.Threading;
 using Gemini.Modules.ErrorList;
 using Gemini.Modules.Output;
+using LightenDark.Module.Console;
+using LightenDark.Studio.Module.CefBrowser.Commands;
+using LightenDark.Studio.Module.ScriptManager;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -14,7 +19,9 @@ using System.Threading.Tasks;
 namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 {
     [Export(typeof(ICefBrowserViewModel))]
-    public class CefBrowserViewModel : Document, ICefBrowserViewModel
+    public class CefBrowserViewModel : Document, ICefBrowserViewModel, 
+        ICommandHandler<BrowserReloadItemDefinition>,
+        ICommandHandler<BrowserSourceCodeItemDefinition>
     {
         #region Fields
 
@@ -41,6 +48,12 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 
         [Import]
         public IErrorList ErrorList { get; set; }
+
+        [Import]
+        public IConsole Console { get; set; }
+
+        [Import]
+        public IScriptManager ScriptManager { get; set; }
 
         #endregion
 
@@ -181,24 +194,46 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 
         #endregion
 
-        //#region Logging
+        #region BrowserReloadItemDefinition
 
-        //public void LogNewAction(ApplicationMessageType type, string data)
-        //{
-        //    if (type == ApplicationMessageType.App)
-        //    {
-        //        ErrorList.AddItem(ErrorListItemType.Message, data, "Application");
-        //    }
-        //    else if (type == ApplicationMessageType.Console)
-        //    {
-        //        ErrorList.AddItem(ErrorListItemType.Message, data, "JavaScript");
-        //    }
-        //    else
-        //    {
-        //        OutputModule.AppendLine(data);
-        //    }
+        void ICommandHandler<BrowserReloadItemDefinition>.Update(Command command)
+        {
+        }
 
-        //}
-        //#endregion
+        Task ICommandHandler<BrowserReloadItemDefinition>.Run(Command command)
+        {
+            WebBrowser.Reload(true);
+            return TaskUtility.Completed;
+        }
+
+        #endregion
+
+        #region BrowserSourceCodeItemDefinition
+
+        void ICommandHandler<BrowserSourceCodeItemDefinition>.Update(Command command)
+        {
+        }
+
+        Task ICommandHandler<BrowserSourceCodeItemDefinition>.Run(Command command)
+        {
+            WebBrowser.ViewSource();
+            return TaskUtility.Completed;
+        }
+
+        #endregion
+
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+            if (close)
+            {
+                foreach (var item in ScriptManager.Items)
+                {
+                    item.Stop(true);
+                }
+            }
+
+
+        }
     }
 }

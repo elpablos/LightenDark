@@ -1,6 +1,7 @@
 ﻿using CefSharp;
 using Gemini.Modules.ErrorList;
 using Gemini.Modules.Output;
+using LightenDark.Module.Console;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -17,9 +18,9 @@ namespace LightenDark.Studio.Core
     [Export(typeof(IBoundClass))]
     public class BoundClass : IBoundClass
     {
-        [Import]
         [JavascriptIgnore]
-        public IOutput OutputModule { get; set; }
+        [Import]
+        public IConsole Console { get; set; }
 
         [Import]
         [JavascriptIgnore]
@@ -34,7 +35,7 @@ namespace LightenDark.Studio.Core
         public void LogWebSocketData(string data)
         {
             BoundMessageHandler(this, new BoundEventArgs(BoundEnum.In, data));
-            OutputModule.AppendLine("IN: " + data);
+            Console.AddItem(ConsoleListItemType.Incoming, data);
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace LightenDark.Studio.Core
         public void LogWebSocketSend(string data)
         {
             BoundMessageHandler(this, new BoundEventArgs(BoundEnum.Out, data));
-            OutputModule.AppendLine("OUT: "+ data);
+            Console.AddItem(ConsoleListItemType.Outgoing, data);
         }
     }
 

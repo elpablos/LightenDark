@@ -3,6 +3,8 @@ using Gemini.Framework.Services;
 using Gemini.Framework.Threading;
 using Gemini.Modules.CodeCompiler;
 using Gemini.Modules.CodeEditor.ViewModels;
+using Gemini.Modules.ErrorList;
+using Gemini.Modules.Output;
 using LightenDark.Api;
 using LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels;
 using Microsoft.CodeAnalysis;
@@ -27,7 +29,13 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
         public ICodeCompiler Compiler { get; private set; }
 
         [Import]
-        public IScriptManager ScriptManager { get; set; }
+        public IScriptManager ScriptManager { get; private set; }
+
+        [Import]
+        public IOutput Output { get; private set; }
+
+        [Import]
+        public IErrorList ErrorList { get; private set; }
 
         public override void Update(Command command)
         {
@@ -44,6 +52,7 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
 
         public override Task Run(Command command)
         {
+            Shell.ShowTool(Output);
             var document = Shell.ActiveItem as CodeEditorViewModel;
             string script = System.IO.File.ReadAllText(document.FilePath);
             lock (ScriptManager.Items)
@@ -58,6 +67,8 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
                             MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
                             MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
                             MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+                            MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Web.Extensions.dll")),
+                            MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "Microsoft.CSharp.dll")),
                             MetadataReference.CreateFromFile(typeof(System.Windows.MessageBox).Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(IScript).Assembly.Location)
                         },
@@ -66,7 +77,7 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
                 if (newAssembly != null)
                 {
                     var items = newAssembly.GetTypes()
-                        .Where(x => typeof(IScript).IsAssignableFrom(x))
+                        .Where(x => typeof(IScript).IsAssignableFrom(x) || x.BaseType == typeof(ScriptBase))
                         .Select(x => (IScript)Activator.CreateInstance(x));
                     foreach (var item in items)
                     {
@@ -74,6 +85,10 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
                     }
 
                     ScriptManager.SelectedItem = ScriptManager.Items.FirstOrDefault();
+                }
+                else
+                {
+                    Shell.ShowTool(ErrorList);
                 }
             }
 

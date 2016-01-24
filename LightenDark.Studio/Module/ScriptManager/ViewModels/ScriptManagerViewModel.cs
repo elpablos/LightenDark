@@ -16,7 +16,7 @@ using System.Collections.ObjectModel;
 namespace LightenDark.Studio.Module.ScriptManager.ViewModels
 {
     [Export(typeof(IScriptManager))]
-    public class ScriptManagerViewModel : Tool, IScriptManager, ICommandHandler<ExecuteScriptCommandDefinition>
+    public class ScriptManagerViewModel : Tool, IScriptManager
     {
         public override string DisplayName
         {
@@ -53,21 +53,6 @@ namespace LightenDark.Studio.Module.ScriptManager.ViewModels
         public ScriptManagerViewModel()
         {
             Items = new ObservableCollection<IScript>();
-        }
-
-        [Import]
-        public IGame Game { get; set; }
-
-        public void Update(Command command)
-        {
-            command.Enabled = SelectedItem != null;
-        }
-
-        public Task Run(Command command)
-        {
-            SelectedItem.Game = Game;
-            SelectedItem.Run();
-            return TaskUtility.Completed;
         }
     }
 }

@@ -31,5 +31,11 @@ namespace LightenDark.Api.Interfaces
         /// </summary>
         [Obsolete]
         event EventHandler<GameEventArgs> GameMessage;
+
+        /// <summary>
+        /// Write message to console
+        /// </summary>
+        /// <param name="message"></param>
+        void OutputWrite(string message);
     }
 }

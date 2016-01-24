@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="LightenDark.Module.Console.Views.ConsoleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LightenDark.Module.Console.Views"
+             xmlns:converters="clr-namespace:LightenDark.Module.Console.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:ConsoleListItemConverter x:Key="ConsoleListItemTypeToImageConverter"
+													  IncomingImageSource="../Resources/Incoming.png"
+													  OutgoingImageSource="../Resources/Outgoing.png" />
+    </UserControl.Resources>
+    <Grid>
+        <DataGrid ItemsSource="{Binding FilteredItems}" 
+                  AutoGenerateColumns="False" IsReadOnly="True"
+				  HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke"
+				  BorderThickness="0" Background="Transparent"
+                  LoadingRow="DataGrid_LoadingRow">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="SizeToCells">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ItemType, Converter={StaticResource ConsoleListItemTypeToImageConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="*" Header="Message" Binding="{Binding Message}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
