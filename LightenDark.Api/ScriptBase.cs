@@ -46,17 +46,20 @@ namespace LightenDark.Api
 
         public void Stop(bool isForce)
         {
-            BeforeStop();
+            if (thread != null && thread.IsAlive)
+            {
+                BeforeStop();
 
-            Game.GameMessage -= Game_GameMessage;
-            lock (obj)
-            {
-                run = false;
-            }
-            ReleaseLock();
-            if (isForce)
-            {
-                thread.Abort();
+                Game.GameMessage -= Game_GameMessage;
+                lock (obj)
+                {
+                    run = false;
+                }
+                ReleaseLock();
+                if (isForce)
+                {
+                    thread.Abort();
+                }
             }
         }
 
