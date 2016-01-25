@@ -80,5 +80,20 @@ namespace LightenDark.Studio.Core.Impl
         {
             Output.AppendLine(message);
         }
+
+        #region Game methods
+
+        // {"type":1,"login":"xxxx","password":""}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        public void Login(string login, string password)
+        {
+
+        }
+
+        #endregion
     }
 }

@@ -292,7 +292,9 @@
     <Content Include="Data\ApplicationStart.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="readme.txt" />
+    <None Include="readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Resource Include="Resources\Icons\developerTool.png" />
     <Resource Include="Resources\Icons\reload.png" />
     <Resource Include="Resources\Icons\sourceCode.png" />
