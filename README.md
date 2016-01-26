@@ -25,8 +25,10 @@ Assist aplication for playing game [Darkenlight.net](http://darkenlight:8082/).
 
 ### Dependencies ###
 
-1. [.NET Framework 4.5](https://www.microsoft.com/cs-cz/download/details.aspx?id=30653)
-2. [Visual C++ Redistributable 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784)
+1. Windows Vista Service Pack 2 or higher
+    * Note: Tested on Windows 7, 8 and 10
+2. [.NET Framework 4.5](https://www.microsoft.com/cs-cz/download/details.aspx?id=30653)
+3. [Visual C++ Redistributable 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784)
 
 ### How do I get set up? ###
 
