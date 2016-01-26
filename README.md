@@ -21,6 +21,8 @@ Assist aplication for playing game [Darkenlight.net](http://darkenlight:8082/).
 * [Extended WPF Toolkit](http://wpftoolkit.codeplex.com/)
     * [AvalonDock](http://wpftoolkit.codeplex.com/wikipage?title=AvalonDock&referringTitle=Home)
 * [Roslyn](https://github.com/dotnet/roslyn)
+* [InnoSetup](http://www.jrsoftware.org/isinfo.php)
+    * [dependencies](https://github.com/stfx/innodependencyinstaller)
 * etc.
 
 ### Dependencies ###
