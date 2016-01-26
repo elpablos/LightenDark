@@ -14,7 +14,8 @@ namespace Gemini.Modules.CodeEditor.Views
         public CodeEditorView()
         {
             InitializeComponent();
-            Loaded += (sender, e) => MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            // commented because it cause crash when is dock dropped in different place!
+            // Loaded += (sender, e) => MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
         }
     }
 }
