@@ -2,30 +2,42 @@
 
 Assist aplication for playing game [Darkenlight.net](http://darkenlight:8082/).
 
-### What is this repository for? ###
+### Shotly about LightenDark ###
 
-* webSocket hook
-* catching messages from server
-* improved chat system
-* executing Javascript methods on website
-* Runtime scripting
+* Current version 1.0.x ALPHA
+* Assistent for [Darkenlight.net](http://darkenlight:8082/)
+* Implement in-app scripting for control avatar in game
+* Scripting used C# code
+* Editor with syntax highlights
+* Panels with received/sent messages
 * etc.
-* Version 1.0.x BETA
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-* [Darkenlight.net](http://darkenlight:8082/)
 
 ### Used technology ###
 
-* Chromium (CEF)
-* CefSharp
-* AvalonDock (Xceed toolkit)
-* Roslyn
+* Chromium ([CEF](https://bitbucket.org/chromiumembedded/cef))
+    * [CefSharp](https://github.com/cefsharp/CefSharp)
+* [Gemini IDE framework](https://github.com/tgjones/gemini)
+* [AvalonEdit](http://avalonedit.net/)
+* [Extended WPF Toolkit](http://wpftoolkit.codeplex.com/)
+    * [AvalonDock](http://wpftoolkit.codeplex.com/wikipage?title=AvalonDock&referringTitle=Home)
+* [Roslyn](https://github.com/dotnet/roslyn)
+* [InnoSetup](http://www.jrsoftware.org/isinfo.php)
+    * [dependencies](https://github.com/stfx/innodependencyinstaller)
 * etc.
+
+### Dependencies ###
+
+1. Windows Vista Service Pack 2 or higher
+    * Note: Tested on Windows 7, 8 and 10
+2. [.NET Framework 4.5](https://www.microsoft.com/cs-cz/download/details.aspx?id=30653)
+3. [Visual C++ Redistributable 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784)
 
 ### How do I get set up? ###
 
-* just download, rebuild and run
-* don't forget set up x64 or x86 platform
+* Use Windows and [Visual Studio 2015](https://www.visualstudio.com/)
+* just clone, set platform on LightenDark.Studio project (x64 vs x86)
+* and rebuild
+* all dependencies will be automatically downloaded throw NuGets
 
 ### Who do I talk to? ###
 
