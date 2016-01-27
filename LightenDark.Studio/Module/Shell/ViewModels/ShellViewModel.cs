@@ -31,6 +31,7 @@ namespace LightenDark.Studio.Module.Shell.ViewModels
 
         protected override void OnInitialize()
         {
+            
         }
 
         private IEnumerable<IResult> CanClose()
