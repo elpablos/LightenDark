@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LightenDark.Api.Models
+namespace LightenDark.Api.Request
 {
     public class RequestLogin : RequestModelBase
     {

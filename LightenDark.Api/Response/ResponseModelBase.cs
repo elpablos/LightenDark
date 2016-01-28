@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LightenDark.Api.Models
+namespace LightenDark.Api.Response
 {
-    public abstract class RequestModelBase
+    public class ResponseModelBase
     {
-        [JsonProperty(PropertyName = "type")]
-        public RequestTypes Type { get; set; }
+        [JsonProperty(PropertyName = "t")]
+        public virtual ResponseTypes Type { get; set; }
     }
 }
