@@ -10,7 +10,7 @@ namespace LightenDark.Api.Types
     {
         Weapon = 1,
         Armor = 2,
-        Jeweů = 3,
+        Jewel = 3,
         Material = 4,
         MonsterFamily = 5,
         MonsterMember = 6

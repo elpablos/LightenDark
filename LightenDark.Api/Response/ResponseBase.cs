@@ -8,9 +8,15 @@ using System.Threading.Tasks;
 
 namespace LightenDark.Api.Response
 {
-    public class ResponseModelBase
+    /// <summary>
+    /// Předek všech odpovědí ze serveru
+    /// </summary>
+    public class ResponseBase
     {
+        /// <summary>
+        /// Typ odpovědi ze serveru
+        /// </summary>
         [JsonProperty(PropertyName = "t")]
-        public virtual ResponseTypes Type { get; set; }
+        public virtual ResponseTypes ResponseType { get; set; }
     }
 }
