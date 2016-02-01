@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace LightenDark.Api.Response
 {
     /// <summary>
-    /// Response na pozadavek na utok
+    /// Obecna odpoved na pozadavek na akci, obsahuje informativni model akce
     /// </summary>
-    public class ResponseAttack : ResponseBase
+    public class ResponseCastSpell : ResponseBase
     {
         /// <summary>
         /// Postava - Utocnik
@@ -38,15 +38,28 @@ namespace LightenDark.Api.Response
         public int MobTarget { get; set; }
 
         /// <summary>
-        ///  Zda je to melee nebo missile
+        /// Id kouzla co jsem zacal carovat
         /// </summary>
-        [JsonProperty(PropertyName = "msl")]
-        public bool IsMissile { get; set; }
+        [JsonProperty(PropertyName = "spid")]
+        private int SpellID { get; set; }
+
+        /// <summary>
+        /// Cas jak dlouho se bude carovat
+        /// </summary>
+        [JsonProperty(PropertyName = "ctm")]
+        private long CastingTime { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        // Mana toho co caruje
+        [JsonProperty(PropertyName = "mp")]
+        private int Mana { get; set; }
 
         /// <summary>
         /// Damage
         /// </summary>
-        [JsonProperty(PropertyName = "dmg")]
-        public DamageWrapperModel Damage { get; set; }
+        [JsonProperty(PropertyName = "spells")]
+        private List<SpellCastModel> Spells { get; set; }
     }
 }

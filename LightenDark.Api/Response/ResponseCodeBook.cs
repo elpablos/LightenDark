@@ -11,7 +11,6 @@ namespace LightenDark.Api.Response
     /// <summary>
     /// Odpoved na pozadavek na kodebooky - obsahuje sezamy vsech kategorii, plny je
     /// ale vzdy jen jeden - 1 kategorie = 1 request
-    /// TODO: chybí dodělat codebook třídy!
     /// </summary>
     public class ResponseCodeBook : ResponseBase
     {

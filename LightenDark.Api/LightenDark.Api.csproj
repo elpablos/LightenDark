@@ -97,6 +97,7 @@
     <Compile Include="Models\ArmorModel.cs" />
     <Compile Include="Models\BuyCraftItemModel.cs" />
     <Compile Include="Models\ChatMessageModel.cs" />
+    <Compile Include="Models\CraftRequirementModel.cs" />
     <Compile Include="Models\DamageWrapperModel.cs" />
     <Compile Include="Models\EnchantmentModel.cs" />
     <Compile Include="Models\EquipSetModel.cs" />
@@ -106,7 +107,9 @@
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\MonsterSpawnModel.cs" />
     <Compile Include="Models\PlayerGraveModel.cs" />
+    <Compile Include="Models\SpellCastModel.cs" />
     <Compile Include="Response\ResponseByeMessage.cs" />
+    <Compile Include="Response\ResponseCastSpell.cs" />
     <Compile Include="Response\ResponseGmAllSpawn.cs" />
     <Compile Include="Models\SkillSetModel.cs" />
     <Compile Include="Models\WeaponModel.cs" />

@@ -89,7 +89,6 @@ namespace LightenDark.Studio.Core.Impl
                         var responseCharacterHpMpChanged= JsonConvert.DeserializeObject<ResponseCharacterHpMpChanged>(e.Message);
                         break;
                     case ResponseTypes.CodeBook:
-                        // TODO nedodelane!
                         var responseCodeBook = JsonConvert.DeserializeObject<ResponseCodeBook>(e.Message);
                         break;
                     case ResponseTypes.InventoryChanged:
@@ -114,7 +113,6 @@ namespace LightenDark.Studio.Core.Impl
                         var responseCraftList = JsonConvert.DeserializeObject<ResponseCraftList>(e.Message);
                         break;
                     case ResponseTypes.Attack:
-                        // TODO nedodelane!
                         var responseAttack = JsonConvert.DeserializeObject<ResponseAttack>(e.Message);
                         break;
                     case ResponseTypes.Movement:
@@ -165,6 +163,9 @@ namespace LightenDark.Studio.Core.Impl
                         break;
                     case ResponseTypes.Augment:
                         var responseAugment = JsonConvert.DeserializeObject<ResponseAugment>(e.Message);
+                        break;
+                    case ResponseTypes.CastSpell:
+                        var responseCastSpell = JsonConvert.DeserializeObject<ResponseCastSpell>(e.Message);
                         break;
                     case ResponseTypes.ChatMessage:
                         var responseChatMessage = JsonConvert.DeserializeObject<ResponseChatMessage>(e.Message);

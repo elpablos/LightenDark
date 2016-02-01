@@ -69,7 +69,6 @@
 
         /// <summary>
         /// Číselník statických položek?
-        /// TODO: Codebooky
         /// <see cref="Response.ResponseMapStaticCodeBook"/>
         /// </summary>
         MapStaticCodeBook = 17,
@@ -100,7 +99,6 @@
 
         /// <summary>
         /// Odpoved na pozadavek na utok
-        /// TODO: Wrapper!
         /// <see cref="Response.ResponseAttack"/>
         /// </summary>
         Attack = 30,
@@ -201,8 +199,13 @@
         Augment = 57,
 
         /// <summary>
+        /// Obecna odpoved na pozadavek na akci, obsahuje informativni model akce
+        /// <see cref="Response.ResponseCastSpell"/>
+        /// </summary>
+        CastSpell = 60,
+
+        /// <summary>
         /// Zprava v chatu
-        /// TODO dodelat
         /// <see cref="Response.ResponseChatMessage"/>
         /// </summary>
         ChatMessage = 63,
