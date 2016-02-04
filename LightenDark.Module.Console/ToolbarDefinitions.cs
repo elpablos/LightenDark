@@ -16,9 +16,9 @@ namespace LightenDark.Module.Console
         public static ToolBarItemGroupDefinition ToggleOutgoingGroup = new ToolBarItemGroupDefinition(
             ConsoleListToolBar, 1);
 
-        //[Export]
-        //public static ToolBarItemGroupDefinition ToggleMessagesGroup = new ToolBarItemGroupDefinition(
-        //    ConsoleListToolBar, 2);
+        [Export]
+        public static ToolBarItemGroupDefinition ToggleMessagesGroup = new ToolBarItemGroupDefinition(
+            ConsoleListToolBar, 2);
 
         [Export]
         public static ToolBarItemDefinition ToggleErrorsToolBarItem = new CommandToolBarItemDefinition<ToggleIncomingCommandDefinition>(
@@ -27,6 +27,10 @@ namespace LightenDark.Module.Console
         [Export]
         public static ToolBarItemDefinition ToggleWarningsToolBarItem = new CommandToolBarItemDefinition<ToggleOutgoingCommandDefinition>(
             ToggleOutgoingGroup, 1, ToolBarItemDisplay.IconAndText);
+
+        [Export]
+        public static ToolBarItemDefinition ClearToolBarItem = new CommandToolBarItemDefinition<ClearCommandDefinition>(
+            ToggleMessagesGroup, 2, ToolBarItemDisplay.IconAndText);
 
         //[Export]
         //public static ToolBarItemDefinition ToggleMessagesToolBarItem = new CommandToolBarItemDefinition<ToggleMessagesCommandDefinition>(
