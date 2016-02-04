@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LightenDark.Studio.Core.Impl
@@ -331,6 +332,7 @@ namespace LightenDark.Studio.Core.Impl
 
         public void SendJavaScript(string message)
         {
+            OutputWrite("JS: "+ message);
             Browser.ExecuteJavaScriptAsync(message);
         }
 
@@ -361,6 +363,73 @@ namespace LightenDark.Studio.Core.Impl
         private void OnBrowserBound()
         {
             BoundClass.BoundMessageHandler += BoundClass_BoundMessageHandler;
+        }
+
+        #endregion
+
+        #region ResponseLoop
+
+        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        public CancellationToken CancelToken { get { return CancelTokenSource.Token; } }
+
+        public CancellationTokenSource CancelTokenSource { get { return cancelTokenSource; } }
+
+        public async Task<T> ResponseWaitBase<T>(
+            Action body,
+            EventHandler<T> responseBeforeHandler, 
+            string eventName, 
+            int timeout = Timeout.Infinite)
+        where T : ResponseBase
+        {
+            var tcs = new TaskCompletionSource<T>();
+
+            // event methods
+            var eventInfo = this.GetType().GetEvent(eventName);
+            System.Reflection.MethodInfo eventAdd = eventInfo.GetAddMethod();
+            System.Reflection.MethodInfo eventRem = eventInfo.GetRemoveMethod();
+
+            // prepare the timeout
+            CancellationToken newToken;
+            if (timeout != Timeout.Infinite)
+            {
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(CancelToken);
+                cts.CancelAfter(timeout);
+                newToken = cts.Token;
+            }
+            else
+                newToken = CancelToken;
+
+            // register cancelation
+            newToken.Register(() => tcs.SetCanceled(), useSynchronizationContext: false);
+            EventHandler<T> handler = null;
+            handler = (s, e) =>
+            {
+                if (e.Cancelled)
+                {
+                    // while cancel
+                    tcs.TrySetCanceled();
+                }
+                else if (e.Error != null)
+                {
+                    // catch errors
+                    tcs.SetException(e.Error);
+                }
+                else
+                {
+                    // do some actions before return data
+                    if (responseBeforeHandler != null)
+                       responseBeforeHandler(s, e);
+                    tcs.SetResult(e);
+                }
+                eventRem.Invoke(this, new object[] { handler });
+            };
+            
+            eventAdd.Invoke(this, new object[] { handler });
+            await Task.Delay(500); // needed delay! 
+
+            body();
+
+            return await tcs.Task;
         }
 
         #endregion

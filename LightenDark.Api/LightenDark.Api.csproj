@@ -89,7 +89,6 @@
     <Compile Include="CodeBooks\MonsterFamilyCodeBook.cs" />
     <Compile Include="CodeBooks\WeaponCodeBook.cs" />
     <Compile Include="DynamicJsonConverter.cs" />
-    <Compile Include="Example.cs" />
     <Compile Include="Interfaces\IBoundClass.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
@@ -169,10 +168,14 @@
     <Compile Include="Response\ResponseWorldSave.cs" />
     <Compile Include="ScriptBase.cs" />
     <Compile Include="Models\GameCharacterModel.cs" />
+    <Compile Include="Types\ActionBasicType.cs" />
     <Compile Include="Types\BoundType.cs" />
     <Compile Include="Types\CodeBookTypes.cs" />
+    <Compile Include="Types\GartheringType.cs" />
     <Compile Include="Types\RequestTypes.cs" />
     <Compile Include="Types\ResponseTypes.cs" />
+    <Compile Include="Types\SpecialskillType.cs" />
+    <Compile Include="Types\SpellType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />

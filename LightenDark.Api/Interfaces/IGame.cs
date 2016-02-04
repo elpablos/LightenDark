@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LightenDark.Api.Interfaces
@@ -26,6 +27,8 @@ namespace LightenDark.Api.Interfaces
         /// <param name="message"></param>
         [Obsolete]
         void SendJavaScript(string message);
+
+        CancellationTokenSource CancelTokenSource { get; }
 
         /// <summary>
         /// Raw messages from server

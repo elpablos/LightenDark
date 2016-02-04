@@ -9,6 +9,8 @@ using System.Threading;
 using System.Windows;
 using System.Web.Script.Serialization;
 using LightenDark.Api.Args;
+using LightenDark.Api.Types;
+using LightenDark.Api.Response;
 
 namespace GeminiTester.Scripts
 {
@@ -24,186 +26,249 @@ namespace GeminiTester.Scripts
         /// <summary>
         /// Main loop
         /// </summary>
-        protected override void Run()
+        protected override async void Run()
         {
-        }
-    }
+            //// init
+            DateTime start = DateTime.Now;
+            ////await Game.Player.CastSpellAsync(Game.Player.ID, 0, (int)SpellType.CreateFood);
+            //Game.Player.MoveUpAsync().Wait();
+            //LogMessage("Up finished");
+            //Game.Player.MoveRightAsync().Wait();
+            //LogMessage("Right finished");
+            //Game.Player.MoveDownAsync().Wait();
+            //LogMessage("Down finished");
+            //Game.Player.MoveLeftAsync().Wait();
+            //LogMessage("Left finished");
 
-    public class SampleScript : ScriptBase
-    {
-        /// <summary>
-        /// Name of script
-        /// </summary>
-        public override string DisplayName { get { return "SampleScript"; } }
 
-        /// <summary>
-        /// Main loop
-        /// </summary>
-        protected override void Run()
-        {
-            Game.Player.MoveDown();
-            Sleep(1000);
-            Game.Player.MoveUp();
-            Sleep(1000);
-            Game.Player.MoveLeft();
-            Sleep(1000);
-            Game.Player.MoveRight();
-            Sleep(1000);
-        }
-    }
+            LogMessage("Start first");
 
-    public class MiningScript : ScriptBase
-    {
-        private Waipoint[] noobDung = new Waipoint[]
-        {
-            new Waipoint(862,75),
-            new Waipoint(862,76),
-            new Waipoint(862,76),
-            new Waipoint(863,76),
-            new Waipoint(864,76),
-            new Waipoint(864,75),
-            new Waipoint(865,75),
-            new Waipoint(865,76),
-            new Waipoint(865,77),
-            new Waipoint(866,77),
-            new Waipoint(866,76),
-            new Waipoint(866,75),
-            new Waipoint(867,75),
-            new Waipoint(867,76),
-            new Waipoint(867,77),
-            new Waipoint(868,77),
-            new Waipoint(868,76),
-            new Waipoint(868,75),
-            new Waipoint(869,75),
-            new Waipoint(869,74),
-            new Waipoint(869,76),
-            new Waipoint(870,76),
-            new Waipoint(870,75),
-            new Waipoint(870,74),
-            new Waipoint(870,73),
-            new Waipoint(870,72),
-            new Waipoint(871,72),
-            new Waipoint(871,73),
-            new Waipoint(871,74),
-            new Waipoint(871,75),
-            new Waipoint(871,76),
-            new Waipoint(871,73),
-            new Waipoint(872,73),
-            new Waipoint(872,72),
-            new Waipoint(872,71),
-            new Waipoint(873,72),
-            new Waipoint(873,71),
-            new Waipoint(874,71),
-            // zpet
-            new Waipoint(872,71),
-            new Waipoint(872,73),
-            new Waipoint(870,73),
-            new Waipoint(870,73),
-            new Waipoint(870,76),
-            new Waipoint(862,76),
-        };
+            await Game.Player.MoveUpAsync();
+            await Game.Player.MoveUpAsync();
+            await Game.Player.MoveUpAsync();
 
-        public Waipoint[] Waipoints { get; set; }
+            LogMessage("Start second");
 
-        private Waipoint PlayerPosition = new Waipoint(0, 0);
-        private JavaScriptSerializer serializer = new JavaScriptSerializer();
+            await Game.Player.MoveRightAsync();
+            await Game.Player.MoveRightAsync();
+            await Game.Player.MoveRightAsync();
 
-        public override string DisplayName
-        {
-            get { return "MiningScript - Internal"; }
+            LogMessage("Start third");
+
+            await Game.Player.MoveDownAsync();
+            await Game.Player.MoveDownAsync();
+            await Game.Player.MoveDownAsync();
+
+            LogMessage("Start fourth");
+
+            await Game.Player.MoveLeftAsync();
+            await Game.Player.MoveLeftAsync();
+            await Game.Player.MoveLeftAsync();
+            //Game.Player.MoveDown();
+            //Thread.Sleep(1000);
+
+            //// Game.Player.MoveUp();
+            LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);
+
+
         }
 
-        public MiningScript()
-        {
-            Waipoints = noobDung;
-            serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
-        }
+        //    private async Task<ResponseMovement> MoveDown()
+        //    {
+        //        var tcs = new TaskCompletionSource<ResponseMovement>();
+        //        EventHandler<ResponseMovement> handler = null;
+        //        handler = (s, e) =>
+        //        {
+        //            tcs.SetResult(e);
+        //            Game.EventMovement -= handler;
+        //        };
 
-        protected override void Game_GameMessage(object sender, GameEventArgs e)
-        {
-            LogMessage("Type " + e.Message);
-            dynamic obj = serializer.Deserialize(e.Message, typeof(object));
+        //        Game.EventMovement += handler;
 
-            // pozice hrace
-            if (obj.t == 32)
-            {
-                PlayerPosition.X = obj.x;
-                PlayerPosition.Y = obj.y;
+        //        await Task.Delay(500);
+        //        Game.Player.MoveDown();
 
-                LogMessage("Pos " + PlayerPosition.X + " " + PlayerPosition.Y);
-                ReleaseLock();
-            }
-            else if (obj.t == 63 && e.Message.Contains("Ore in this location is depleted"))
-            {
-                // vytezeno
-                ReleaseLock();
-            }
-        }
 
-        protected override void Run()
-        {
-            int i = 0;
-            while (run)
-            {
-                if (i == Waipoints.Length) i = 0;
-                LogMessage("Waipoint " + i);
-                GoToWaypoint(Waipoints[i]);
+        //        return await tcs.Task;
+        //    }
+        //}
 
-                // tezba
-                SendJavascript("ws.send('{\"type\":66,\"gatherType\":1}');");
-                WaitLock();
+        //public class SampleScript : ScriptBase
+        //{
+        //    /// <summary>
+        //    /// Name of script
+        //    /// </summary>
+        //    public override string DisplayName { get { return "SampleScript"; } }
 
-                Sleep(1000);
-                i++;
-            }
-        }
+        //    /// <summary>
+        //    /// Main loop
+        //    /// </summary>
+        //    protected override void Run()
+        //    {
+        //        Game.Player.MoveDown();
+        //        Sleep(1000);
+        //        Game.Player.MoveUp();
+        //        Sleep(1000);
+        //        Game.Player.MoveLeft();
+        //        Sleep(1000);
+        //        Game.Player.MoveRight();
+        //        Sleep(1000);
+        //    }
+        //}
 
-        protected void GoToWaypoint(Waipoint point)
-        {
-            while (run && (PlayerPosition.X != point.X))
-            {
-                if (PlayerPosition.X > point.X)
-                {
-                    SendJavascript("moveLeft();");
-                }
-                else
-                {
-                    SendJavascript("moveRight();");
-                }
+        //public class MiningScript : ScriptBase
+        //{
+        //    private Waipoint[] noobDung = new Waipoint[]
+        //    {
+        //        new Waipoint(862,75),
+        //        new Waipoint(862,76),
+        //        new Waipoint(862,76),
+        //        new Waipoint(863,76),
+        //        new Waipoint(864,76),
+        //        new Waipoint(864,75),
+        //        new Waipoint(865,75),
+        //        new Waipoint(865,76),
+        //        new Waipoint(865,77),
+        //        new Waipoint(866,77),
+        //        new Waipoint(866,76),
+        //        new Waipoint(866,75),
+        //        new Waipoint(867,75),
+        //        new Waipoint(867,76),
+        //        new Waipoint(867,77),
+        //        new Waipoint(868,77),
+        //        new Waipoint(868,76),
+        //        new Waipoint(868,75),
+        //        new Waipoint(869,75),
+        //        new Waipoint(869,74),
+        //        new Waipoint(869,76),
+        //        new Waipoint(870,76),
+        //        new Waipoint(870,75),
+        //        new Waipoint(870,74),
+        //        new Waipoint(870,73),
+        //        new Waipoint(870,72),
+        //        new Waipoint(871,72),
+        //        new Waipoint(871,73),
+        //        new Waipoint(871,74),
+        //        new Waipoint(871,75),
+        //        new Waipoint(871,76),
+        //        new Waipoint(871,73),
+        //        new Waipoint(872,73),
+        //        new Waipoint(872,72),
+        //        new Waipoint(872,71),
+        //        new Waipoint(873,72),
+        //        new Waipoint(873,71),
+        //        new Waipoint(874,71),
+        //        // zpet
+        //        new Waipoint(872,71),
+        //        new Waipoint(872,73),
+        //        new Waipoint(870,73),
+        //        new Waipoint(870,73),
+        //        new Waipoint(870,76),
+        //        new Waipoint(862,76),
+        //    };
 
-                WaitLock(2000);
-                Sleep(1000);
-            }
+        //    public Waipoint[] Waipoints { get; set; }
 
-            while (run && (PlayerPosition.Y != point.Y))
-            {
-                if (PlayerPosition.Y > point.Y)
-                {
-                    SendJavascript("moveUp();");
-                }
-                else
-                {
-                    SendJavascript("moveDown();");
-                }
+        //    private Waipoint PlayerPosition = new Waipoint(0, 0);
+        //    private JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                WaitLock(2000);
-                Sleep(1000);
-            }
-        }
-    }
+        //    public override string DisplayName
+        //    {
+        //        get { return "MiningScript - Internal"; }
+        //    }
 
-    public class Waipoint
-    {
-        public int X { get; set; }
+        //    public MiningScript()
+        //    {
+        //        Waipoints = noobDung;
+        //        serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
+        //    }
 
-        public int Y { get; set; }
+        //    protected override void Game_GameMessage(object sender, GameEventArgs e)
+        //    {
+        //        LogMessage("Type " + e.Message);
+        //        dynamic obj = serializer.Deserialize(e.Message, typeof(object));
 
-        public Waipoint(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
+        //        // pozice hrace
+        //        if (obj.t == 32)
+        //        {
+        //            PlayerPosition.X = obj.x;
+        //            PlayerPosition.Y = obj.y;
+
+        //            LogMessage("Pos " + PlayerPosition.X + " " + PlayerPosition.Y);
+        //            ReleaseLock();
+        //        }
+        //        else if (obj.t == 63 && e.Message.Contains("Ore in this location is depleted"))
+        //        {
+        //            // vytezeno
+        //            ReleaseLock();
+        //        }
+        //    }
+
+        //    protected override void Run()
+        //    {
+        //        int i = 0;
+        //        while (run)
+        //        {
+        //            if (i == Waipoints.Length) i = 0;
+        //            LogMessage("Waipoint " + i);
+        //            GoToWaypoint(Waipoints[i]);
+
+        //            // tezba
+        //            SendJavascript("ws.send('{\"type\":66,\"gatherType\":1}');");
+        //            WaitLock();
+
+        //            Sleep(1000);
+        //            i++;
+        //        }
+        //    }
+
+        //    protected void GoToWaypoint(Waipoint point)
+        //    {
+        //        while (run && (PlayerPosition.X != point.X))
+        //        {
+        //            if (PlayerPosition.X > point.X)
+        //            {
+        //                SendJavascript("moveLeft();");
+        //            }
+        //            else
+        //            {
+        //                SendJavascript("moveRight();");
+        //            }
+
+        //            WaitLock(2000);
+        //            Sleep(1000);
+        //        }
+
+        //        while (run && (PlayerPosition.Y != point.Y))
+        //        {
+        //            if (PlayerPosition.Y > point.Y)
+        //            {
+        //                SendJavascript("moveUp();");
+        //            }
+        //            else
+        //            {
+        //                SendJavascript("moveDown();");
+        //            }
+
+        //            WaitLock(2000);
+        //            Sleep(1000);
+        //        }
+        //    }
+        //}
+
+        //public class Waipoint
+        //{
+        //    public int X { get; set; }
+
+        //    public int Y { get; set; }
+
+        //    public Waipoint(int x, int y)
+        //    {
+        //        X = x;
+        //        Y = y;
+        //    }
+        //}
 
 #endif
+    }
 }

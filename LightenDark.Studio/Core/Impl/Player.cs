@@ -1,11 +1,14 @@
 ﻿using Caliburn.Micro;
 using LightenDark.Api.Interfaces;
 using LightenDark.Api.Models;
+using LightenDark.Api.Response;
+using LightenDark.Api.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LightenDark.Studio.Core.Impl
@@ -110,21 +113,32 @@ namespace LightenDark.Studio.Core.Impl
 
         private void Game_EventInventoryChanged(object sender, Api.Response.ResponseInventoryChanged e)
         {
+            if (e.ArmorAdded != null)
             Inventory.Armors.AddRange(e.ArmorAdded);
+            if (e.ArmorRemoved != null)
             Inventory.Armors.RemoveAll(x => e.ArmorRemoved.Contains(x));
 
-            Inventory.Weapons.AddRange(e.WeaponAdded);
-            Inventory.Weapons.RemoveAll(x => e.WeaponRemoved.Contains(x));
+            if (e.WeaponAdded != null)
+                Inventory.Weapons.AddRange(e.WeaponAdded);
+            if (e.WeaponRemoved != null)
+                Inventory.Weapons.RemoveAll(x => e.WeaponRemoved.Contains(x));
 
-            Inventory.Materials.AddRange(e.MaterialAdded);
-            Inventory.Materials.RemoveAll(x => e.MaterialRemoved.Contains(x));
+            if (e.MaterialAdded != null)
+                Inventory.Materials.AddRange(e.MaterialAdded);
+            if (e.MaterialRemoved != null)
+                Inventory.Materials.RemoveAll(x => e.MaterialRemoved.Contains(x));
 
-            Inventory.Jewels.AddRange(e.JewelAdded);
-            Inventory.Jewels.RemoveAll(x => e.JewelRemoved.Contains(x));
+            if (e.JewelAdded != null)
+                Inventory.Jewels.AddRange(e.JewelAdded);
+            if (e.JewelRemoved != null)
+                Inventory.Jewels.RemoveAll(x => e.JewelRemoved.Contains(x));
 
-            EquipmentSet = e.EquipSet;
-            GameCharacter = e.GameCharacter;
-            GameCharacterData = e.GameCharacterData;
+            if (e.EquipSet != null)
+                EquipmentSet = e.EquipSet;
+            if (e.GameCharacter != null)
+                GameCharacter = e.GameCharacter;
+            if (e.GameCharacterData != null)
+                GameCharacterData = e.GameCharacterData;
         }
 
         /// <summary>
@@ -182,31 +196,6 @@ namespace LightenDark.Studio.Core.Impl
 
         #region Public methods
 
-        public void MoveDown()
-        {
-            game.SendJavaScript("moveDown();");
-        }
-
-        public void MoveLeft()
-        {
-            game.SendJavaScript("moveLeft();");
-        }
-
-        public void MoveRight()
-        {
-            game.SendJavaScript("moveRight();");
-        }
-
-        public void MoveUp()
-        {
-            game.SendJavaScript("moveUp();");
-        }
-
-        public void Stop()
-        {
-            game.SendJavaScript("requestStop();");
-        }
-
         public void AutoAttack(int? mobID, int? characterID)
         {
             game.SendJavaScript(string.Format("requestAutoAttack({0}, {1});", mobID, characterID));
@@ -237,26 +226,123 @@ namespace LightenDark.Studio.Core.Impl
             game.SendJavaScript(string.Format("requestMeditation();"));
         }
 
-        public void ActionBasicRaw(int actionType)
-        {
-            game.SendJavaScript(string.Format("ReqActBasic({0});", actionType));
-        }
-
-        public void Specialskill(int type)
-        {
-            game.SendJavaScript(string.Format("requestSpecialskill({0});", type));
-        }
-
         public void CastSpell(int spell)
         {
             game.SendJavaScript(string.Format("requestCastSpell({0});", spell));
         }
 
-        public void CastSpellRaw(int chrTgt, int mobTgt, int spell)
+        #region Movement
+
+        public Task<ResponseMovement> MoveRightAsync(int timeout = Timeout.Infinite)
         {
-            game.SendJavaScript(string.Format("ReqCastSpell({0}, {1}, {2});", chrTgt, mobTgt, spell));
+            return MovementBaseAsync(MoveRight);
         }
 
+        public Task<ResponseMovement> MoveLeftAsync(int timeout = Timeout.Infinite)
+        {
+            return MovementBaseAsync(MoveLeft);
+        }
+
+        public Task<ResponseMovement> MoveDownAsync(int timeout = Timeout.Infinite)
+        {
+            return MovementBaseAsync(MoveDown);
+        }
+
+        public Task<ResponseMovement> MoveUpAsync(int timeout = Timeout.Infinite)
+        {
+            return MovementBaseAsync(MoveUp);
+        }
+
+        private Task<ResponseMovement> MovementBaseAsync(System.Action action, int timeout = Timeout.Infinite)
+        {
+            return game.ResponseWaitBase<ResponseMovement>(action,
+                async (s, e) =>
+                {
+                    await Task.Delay(GameCharacter.MoveTime);
+                }, "EventMovement", timeout);
+        }
+
+
+        public void MoveDown()
+        {
+            game.SendJavaScript("moveDown();");
+        }
+
+        private void MoveLeft()
+        {
+            game.SendJavaScript("moveLeft();");
+        }
+
+        private void MoveRight()
+        {
+            game.SendJavaScript("moveRight();");
+        }
+
+        private void MoveUp()
+        {
+            game.SendJavaScript("moveUp();");
+        }
+
+        #endregion
+
+        #region Actions
+
+        public void Stop()
+        {
+            game.SendJavaScript("requestStop();");
+        }
+
+        public void ActionBasic(ActionBasicType type)
+        {
+            ActionBasic((int)type);
+        }
+
+        public void ActionBasic(GartheringType type)
+        {
+            Garthering((int)type);
+        }
+
+        public void Specialskill(SpecialskillType type)
+        {
+            Specialskill((int)type);
+        }
+
+        public void Garthering(int type)
+        {
+            string js = string.Format("ws.send('{{\"type\":83,\"skillType\":{0}}}');", type);
+            game.SendJavaScript(js);
+        }
+
+        public void Specialskill(int type)
+        {
+            string js = string.Format("ws.send('{{\"type\":83,\"skillType\":{0}}}');", type);
+            game.SendJavaScript(js);
+        }
+
+        public void ActionBasic(int type)
+        {
+            string js = string.Format("ws.send('{{\"type\":20,\"actType\":{0}}}');", type);
+            game.SendJavaScript(js);
+        }
+
+        public Task<ResponseCastSpell> CastSpellAsync(int chrTgt, int mobTgt, int spell, int timeout = Timeout.Infinite)
+        {
+            // wait for response
+            return game.ResponseWaitBase<ResponseCastSpell>(
+                () =>
+                {
+                    // cast spell
+                    string js = string.Format("ws.send('{{\"type\":59,\"chrTgt\":{0},\"mobTgt\":{1},\"spell\":{2}}}');", chrTgt, mobTgt, spell);
+                    game.SendJavaScript(js);
+                },
+                async (s, e) =>
+                {
+                    // wait for casting time
+                    await Task.Delay((int)e.CastingTime);
+                }, "EventCastSpell", timeout);
+        }
+
+        #endregion
 
         #endregion
     }

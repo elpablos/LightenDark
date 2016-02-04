@@ -29,7 +29,7 @@ namespace LightenDark.Api.Response
         /// Mob - Utocnik
         /// </summary>
         [JsonProperty(PropertyName = "mobAtt")]
-        public int mobAttack { get; set; }
+        public int MobAttack { get; set; }
 
         /// <summary>
         /// Mob - Cil
@@ -41,25 +41,25 @@ namespace LightenDark.Api.Response
         /// Id kouzla co jsem zacal carovat
         /// </summary>
         [JsonProperty(PropertyName = "spid")]
-        private int SpellID { get; set; }
+        public int SpellID { get; set; }
 
         /// <summary>
         /// Cas jak dlouho se bude carovat
         /// </summary>
         [JsonProperty(PropertyName = "ctm")]
-        private long CastingTime { get; set; }
+        public long CastingTime { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         // Mana toho co caruje
         [JsonProperty(PropertyName = "mp")]
-        private int Mana { get; set; }
+        public int Mana { get; set; }
 
         /// <summary>
         /// Damage
         /// </summary>
         [JsonProperty(PropertyName = "spells")]
-        private List<SpellCastModel> Spells { get; set; }
+        public List<SpellCastModel> Spells { get; set; }
     }
 }

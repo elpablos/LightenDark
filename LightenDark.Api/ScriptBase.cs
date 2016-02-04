@@ -35,7 +35,11 @@ namespace LightenDark.Api
         public void Start()
         {
             Game.GameMessage += Game_GameMessage;
+            // Game.CancelTokenSource.Token.
             thread = new Thread(new ThreadStart(AbstractRun));
+
+            //Task t = new Task(AbstractRun);
+            //t.Start();
 
             lock (obj)
             {
@@ -56,6 +60,7 @@ namespace LightenDark.Api
                     run = false;
                 }
                 ReleaseLock();
+                Game.CancelTokenSource.Cancel(false);
                 if (isForce)
                 {
                     thread.Abort();
