@@ -61,7 +61,7 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
 
                 var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
                 var newAssembly = Compiler.Compile(
-                     new[] { CSharpSyntaxTree.ParseText(script) },
+                     new[] { CSharpSyntaxTree.ParseText(script, CSharpParseOptions.Default, document.FilePath) },
                      new[]
                          {
                             MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
