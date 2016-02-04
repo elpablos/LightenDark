@@ -25,7 +25,7 @@ namespace LightenDark.Api.Response
         /// 3 - Jewel
         /// </summary>
         [JsonProperty(PropertyName = "itemType")]
-        public byte itemType { get; set; }
+        public byte ItemType { get; set; }
 
         /// <summary>
         /// Nova durabilita

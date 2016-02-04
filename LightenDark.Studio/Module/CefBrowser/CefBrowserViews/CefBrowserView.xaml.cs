@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using LightenDark.Studio.Core;
+using LightenDark.Api.Interfaces;
 using System.Windows.Controls;
 
 namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViews

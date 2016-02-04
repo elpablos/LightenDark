@@ -1,6 +1,7 @@
-﻿using System;
+﻿using LightenDark.Api.Args;
+using System;
 
-namespace LightenDark.Studio.Core
+namespace LightenDark.Api.Interfaces
 {
     public interface IBoundClass
     {

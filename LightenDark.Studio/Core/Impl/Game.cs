@@ -20,6 +20,8 @@ namespace LightenDark.Studio.Core.Impl
     [Export(typeof(IGame))]
     public class Game : IGame
     {
+        #region Properties
+
         public IPlayer Player { get; set; }
 
         public IWorld World { get; set; }
@@ -42,6 +44,70 @@ namespace LightenDark.Studio.Core.Impl
             }
         }
 
+        #endregion
+
+        #region Events
+
+        public event EventHandler<GameEventArgs> GameMessage = delegate { };
+
+        public event EventHandler<ResponseLogin> EventLogin = delegate { };
+
+        public event EventHandler<ResponseMobMove> EventMobMove = delegate { };
+
+        public event EventHandler<ResponseCharacterData> EventCharacterData = delegate { };
+
+        public event EventHandler<ResponseSendMessage> EventSendMessage = delegate { };
+
+        public event EventHandler<ResponseStaticObjectChange> EventStaticObjectChange = delegate { };
+
+        public event EventHandler<ResponseItemDamaged> EventItemDamaged = delegate { };
+
+        public event EventHandler<ResponseCharacterHpMpChanged> EventCharacterHpMpChanged = delegate { };
+
+        public event EventHandler<ResponseCodeBook> EventCodeBook = delegate { };
+
+        public event EventHandler<ResponseInventoryChanged> EventInventoryChanged = delegate { };
+
+        public event EventHandler<ResponseItemAction> EventItemAction = delegate { };
+
+        public event EventHandler<ResponseMapStaticCodeBook> EventMapStaticCodeBook = delegate { };
+
+        public event EventHandler<ResponseSkillSetChanged> EventSkillSetChanged = delegate { };
+
+        public event EventHandler<ResponseLoadBank> EventLoadBank = delegate { };
+
+        public event EventHandler<ResponseBankOperation> EventBankOperation = delegate { };
+
+        public event EventHandler<ResponseCraftList> EventCraftList = delegate { };
+
+        public event EventHandler<ResponseAttack> EventAttack = delegate { };
+
+        public event EventHandler<ResponseMovement> EventMovement = delegate { };
+
+        public event EventHandler<ResponseMobData> EventMobData = delegate { };
+
+        public event EventHandler<ResponseBase> EventCombatAction = delegate { };
+
+        public event EventHandler<ResponseLoadLoot> EventLoadLoot = delegate { };
+
+        public event EventHandler<ResponseLootOperation> EventLootOperation = delegate { };
+
+        public event EventHandler<ResponseOrphanItems> EventOrphanItems = delegate { };
+
+        public event EventHandler<ResponseCharacterAction> EventCharacterAction = delegate { };
+
+        public event EventHandler<ResponseMapData> EventMapData = delegate { };
+
+        public event EventHandler<ResponseNpcData> EventNpcData = delegate { };
+
+        public event EventHandler<ResponseChatMessage> EventChatMessage = delegate { };
+
+        public event EventHandler<ResponseCastSpell> EventCastSpell = delegate { };
+
+        #endregion
+
+        #region Constructor
+
         [ImportingConstructor]
         public Game(IPropertyGrid propertyGrid)
         {
@@ -50,10 +116,9 @@ namespace LightenDark.Studio.Core.Impl
             World = new World(this);
         }
 
-        private void OnBrowserBound()
-        {
-            BoundClass.BoundMessageHandler += BoundClass_BoundMessageHandler;
-        }
+        #endregion
+
+        #region Events
 
         /// <summary>
         /// Resend only incoming message
@@ -62,77 +127,99 @@ namespace LightenDark.Studio.Core.Impl
         /// <param name="e"></param>
         private void BoundClass_BoundMessageHandler(object sender, BoundEventArgs e)
         {
-            if (e.BoundType == BoundEnum.In)
+            if (e.BoundType == BoundType.In)
             {
                 ResponseBase responseBase = JsonConvert.DeserializeObject<ResponseBase>(e.Message);
                 switch (responseBase.ResponseType)
                 {
                     case ResponseTypes.Login:
                         var responseLogin = JsonConvert.DeserializeObject<ResponseLogin>(e.Message);
+                        EventLogin(this, responseLogin);
                         break;
                     case ResponseTypes.MobMove:
                         var responseMobMove = JsonConvert.DeserializeObject<ResponseMobMove>(e.Message);
+                        EventMobMove(this, responseMobMove);
                         break;
                     case ResponseTypes.CharacterData:
                         var responseCharacterData = JsonConvert.DeserializeObject<ResponseCharacterData>(e.Message);
+                        EventCharacterData(this, responseCharacterData);
                         break;
                     case ResponseTypes.SendMessage:
                         var responseSendMessage = JsonConvert.DeserializeObject<ResponseSendMessage>(e.Message);
+                        EventSendMessage(this, responseSendMessage);
                         break;
                     case ResponseTypes.StaticObjectChange:
                         var responseStaticObjectChange = JsonConvert.DeserializeObject<ResponseStaticObjectChange>(e.Message);
+                        EventStaticObjectChange(this, responseStaticObjectChange);
                         break;
                     case ResponseTypes.ItemDamaged:
                         var responseItemDamaged = JsonConvert.DeserializeObject<ResponseItemDamaged>(e.Message);
+                        EventItemDamaged(this, responseItemDamaged);
                         break;
                     case ResponseTypes.CharacterHpMpChanged:
-                        var responseCharacterHpMpChanged= JsonConvert.DeserializeObject<ResponseCharacterHpMpChanged>(e.Message);
+                        var responseCharacterHpMpChanged = JsonConvert.DeserializeObject<ResponseCharacterHpMpChanged>(e.Message);
+                        EventCharacterHpMpChanged(this, responseCharacterHpMpChanged);
                         break;
                     case ResponseTypes.CodeBook:
                         var responseCodeBook = JsonConvert.DeserializeObject<ResponseCodeBook>(e.Message);
+                        EventCodeBook(this, responseCodeBook);
                         break;
                     case ResponseTypes.InventoryChanged:
-                        var responseInventoryChanged= JsonConvert.DeserializeObject<ResponseInventoryChanged>(e.Message);
+                        var responseInventoryChanged = JsonConvert.DeserializeObject<ResponseInventoryChanged>(e.Message);
+                        EventInventoryChanged(this, responseInventoryChanged);
                         break;
                     case ResponseTypes.ItemAction:
                         var responseItemAction = JsonConvert.DeserializeObject<ResponseItemAction>(e.Message);
+                        EventItemAction(this, responseItemAction);
                         break;
                     case ResponseTypes.MapStaticCodeBook:
                         var responseMapStaticCodeBook = JsonConvert.DeserializeObject<ResponseMapStaticCodeBook>(e.Message);
+                        EventMapStaticCodeBook(this, responseMapStaticCodeBook);
                         break;
                     case ResponseTypes.SkillSetChanged:
                         var responseSkillSetChanged = JsonConvert.DeserializeObject<ResponseSkillSetChanged>(e.Message);
+                        EventSkillSetChanged(this, responseSkillSetChanged);
                         break;
                     case ResponseTypes.LoadBank:
                         var responseLoadBank = JsonConvert.DeserializeObject<ResponseLoadBank>(e.Message);
+                        EventLoadBank(this, responseLoadBank);
                         break;
                     case ResponseTypes.BankOperation:
                         var responseBankOperation = JsonConvert.DeserializeObject<ResponseBankOperation>(e.Message);
+                        EventBankOperation(this, responseBankOperation);
                         break;
                     case ResponseTypes.CraftList:
                         var responseCraftList = JsonConvert.DeserializeObject<ResponseCraftList>(e.Message);
+                        EventCraftList(this, responseCraftList);
                         break;
                     case ResponseTypes.Attack:
                         var responseAttack = JsonConvert.DeserializeObject<ResponseAttack>(e.Message);
+                        EventAttack(this, responseAttack);
                         break;
                     case ResponseTypes.Movement:
                         var responseMovement = JsonConvert.DeserializeObject<ResponseMovement>(e.Message);
+                        EventMovement(this, responseMovement);
                         break;
                     case ResponseTypes.MobData:
-                        var ResponseMobData = JsonConvert.DeserializeObject<ResponseMobData>(e.Message);
+                        var responseMobData = JsonConvert.DeserializeObject<ResponseMobData>(e.Message);
+                        EventMobData(this, responseMobData);
                         break;
                     case ResponseTypes.CombatAction:
                         // not implemented in game yet
                         var responseCombatAction = JsonConvert.DeserializeObject<ResponseBase>(e.Message);
+                        EventCombatAction(this, responseCombatAction);
                         break;
                     case ResponseTypes.LoadLoot:
                         var responseLoadLoot = JsonConvert.DeserializeObject<ResponseLoadLoot>(e.Message);
+                        EventLoadLoot(this, responseLoadLoot);
                         break;
                     case ResponseTypes.LootOperation:
                         var responseLootOperation = JsonConvert.DeserializeObject<ResponseLootOperation>(e.Message);
+                        EventLootOperation(this, responseLootOperation);
                         break;
                     case ResponseTypes.OrphanItems:
                         var responseOrphanItems = JsonConvert.DeserializeObject<ResponseOrphanItems>(e.Message);
+                        EventOrphanItems(this, responseOrphanItems);
                         break;
                     case ResponseTypes.PlayerGraves:
                         var responsePlayerGraves = JsonConvert.DeserializeObject<ResponsePlayerGraves>(e.Message);
@@ -147,7 +234,7 @@ namespace LightenDark.Studio.Core.Impl
                         var responseExperienceGoldChanged = JsonConvert.DeserializeObject<ResponseExperienceGoldChanged>(e.Message);
                         break;
                     case ResponseTypes.LevelUp:
-                            var responseLevelUp = JsonConvert.DeserializeObject<ResponseLevelUp>(e.Message);
+                        var responseLevelUp = JsonConvert.DeserializeObject<ResponseLevelUp>(e.Message);
                         break;
                     case ResponseTypes.Offer:
                         var responseOffer = JsonConvert.DeserializeObject<ResponseOffer>(e.Message);
@@ -166,18 +253,23 @@ namespace LightenDark.Studio.Core.Impl
                         break;
                     case ResponseTypes.CastSpell:
                         var responseCastSpell = JsonConvert.DeserializeObject<ResponseCastSpell>(e.Message);
+                        EventCastSpell(this, responseCastSpell);
                         break;
                     case ResponseTypes.ChatMessage:
                         var responseChatMessage = JsonConvert.DeserializeObject<ResponseChatMessage>(e.Message);
+                        EventChatMessage(this, responseChatMessage);
                         break;
                     case ResponseTypes.MapData:
                         var responseMapData = JsonConvert.DeserializeObject<ResponseMapData>(e.Message);
+                        EventMapData(this, responseMapData);
                         break;
                     case ResponseTypes.CharacterAction:
                         var responseCharacterAction = JsonConvert.DeserializeObject<ResponseCharacterAction>(e.Message);
+                        EventCharacterAction(this, responseCharacterAction);
                         break;
                     case ResponseTypes.NpcData:
                         var responseNpcData = JsonConvert.DeserializeObject<ResponseNpcData>(e.Message);
+                        EventNpcData(this, responseNpcData);
                         break;
                     case ResponseTypes.PlayerGraveChanged:
                         var responsePlayerGraveChanged = JsonConvert.DeserializeObject<ResponsePlayerGraveChanged>(e.Message);
@@ -233,7 +325,9 @@ namespace LightenDark.Studio.Core.Impl
             }
         }
 
-        public event EventHandler<GameEventArgs> GameMessage = delegate { };
+        #endregion
+
+        #region Public methods
 
         public void SendJavaScript(string message)
         {
@@ -244,6 +338,8 @@ namespace LightenDark.Studio.Core.Impl
         {
             Output.AppendLine(message);
         }
+
+        #endregion
 
         #region Game methods
 
@@ -256,6 +352,15 @@ namespace LightenDark.Studio.Core.Impl
         public void Login(string login, string password)
         {
 
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void OnBrowserBound()
+        {
+            BoundClass.BoundMessageHandler += BoundClass_BoundMessageHandler;
         }
 
         #endregion

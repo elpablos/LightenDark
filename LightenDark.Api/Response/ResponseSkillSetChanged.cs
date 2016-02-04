@@ -17,19 +17,19 @@ namespace LightenDark.Api.Response
         /// SkillSet
         /// </summary>
         [JsonProperty(PropertyName = "skillset")]
-        public SkillSetModel skillset { get; set; }
+        public SkillSetModel Skillset { get; set; }
 
         /// <summary>
         /// Data postavy
         /// </summary>
         [JsonProperty(PropertyName = "chrData")]
-        public GameCharacterDataModel chrData { get; set; }
+        public GameCharacterDataModel GameCharacterData { get; set; }
 
         /// <summary>
         /// Postava
         /// </summary>
         [JsonProperty(PropertyName = "chrTo")]
-        public GameCharacterModel chrTo { get; set; }
+        public GameCharacterModel GameCharacter { get; set; }
 
     }
 }

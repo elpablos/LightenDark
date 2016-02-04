@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Args\BoundEventArgs.cs" />
     <Compile Include="CodeBooks\ArmorCodeBook.cs" />
     <Compile Include="Args\GameEventArgs.cs" />
     <Compile Include="CodeBooks\JewelCodeBook.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="CodeBooks\WeaponCodeBook.cs" />
     <Compile Include="DynamicJsonConverter.cs" />
     <Compile Include="Example.cs" />
+    <Compile Include="Interfaces\IBoundClass.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IWorld.cs" />
@@ -167,11 +169,14 @@
     <Compile Include="Response\ResponseWorldSave.cs" />
     <Compile Include="ScriptBase.cs" />
     <Compile Include="Models\GameCharacterModel.cs" />
+    <Compile Include="Types\BoundType.cs" />
     <Compile Include="Types\CodeBookTypes.cs" />
     <Compile Include="Types\RequestTypes.cs" />
     <Compile Include="Types\ResponseTypes.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

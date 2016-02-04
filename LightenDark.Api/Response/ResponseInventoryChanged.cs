@@ -44,7 +44,7 @@ namespace LightenDark.Api.Response
         /// Odebrany sperk
         /// </summary>
         [JsonProperty(PropertyName = "jremoved")]
-        public List<JewelModel> JewebRemoved { get; set; }
+        public List<JewelModel> JewelRemoved { get; set; }
 
         /// <summary>
         /// Přidaný material

@@ -16,39 +16,16 @@ namespace GeminiTester.Scripts
 
     public class TestScript : ScriptBase
     {
-        private JavaScriptSerializer serializer = new JavaScriptSerializer();
-
         /// <summary>
         /// Name of script
         /// </summary>
         public override string DisplayName { get { return "TestScript"; } }
-
-        public TestScript()
-        {
-            serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
-        }
 
         /// <summary>
         /// Main loop
         /// </summary>
         protected override void Run()
         {
-        }
-
-        protected override void Game_GameMessage(object sender, GameEventArgs e)
-        {
-            LogMessage("Type " + e.Message);
-            dynamic obj = serializer.Deserialize(e.Message, typeof(object));
-            if (obj == null)
-            {
-                LogMessage("obj is null");
-            }
-            else
-            {
-                LogMessage("obj is not null");
-                LogMessage("t" + obj.t);
-            }
-
         }
     }
 

@@ -200,9 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BoundClass.cs" />
-    <Compile Include="Core\BoundEnum.cs" />
     <Compile Include="Core\Impl\Game.cs" />
-    <Compile Include="Core\IBoundClass.cs" />
     <Compile Include="Core\Impl\Player.cs" />
     <Compile Include="Core\Impl\World.cs" />
     <Compile Include="Example.cs" />

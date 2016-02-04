@@ -76,7 +76,7 @@ namespace LightenDark.Api.Response
         /// Podkladova mapa celeho sveta
         /// </summary>
         [JsonProperty(PropertyName = "worldMap")]
-        public int[] worldMap { get; set; }
+        public int[] WorldMap { get; set; }
 
         /// <summary>
         /// Zprava pokud se prihlaseni nepovedlo
