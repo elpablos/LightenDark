@@ -268,7 +268,7 @@ namespace GeminiTester.Scripts
         //        Y = y;
         //    }
         //}
-
-#endif
     }
+#endif
+
 }
