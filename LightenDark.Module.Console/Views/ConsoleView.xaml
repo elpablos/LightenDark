@@ -17,7 +17,9 @@
                   AutoGenerateColumns="False" IsReadOnly="True"
 				  HorizontalGridLinesBrush="WhiteSmoke" VerticalGridLinesBrush="WhiteSmoke"
 				  BorderThickness="0" Background="Transparent"
-                  LoadingRow="DataGrid_LoadingRow">
+                  ScrollViewer.ScrollChanged="DataGrid_ScrollChanged" 
+                  ScrollViewer.IsDeferredScrollingEnabled="True"
+                  >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="SizeToCells">
                     <DataGridTemplateColumn.CellTemplate>

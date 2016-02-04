@@ -104,6 +104,10 @@
       <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Gat.Controls.AboutBox, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AboutBox.2.0.0\lib\net45\Gat.Controls.AboutBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.0.0.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -114,6 +118,10 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.1.1\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -196,9 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BoundClass.cs" />
-    <Compile Include="Core\BoundEnum.cs" />
     <Compile Include="Core\Impl\Game.cs" />
-    <Compile Include="Core\IBoundClass.cs" />
     <Compile Include="Core\Impl\Player.cs" />
     <Compile Include="Core\Impl\World.cs" />
     <Compile Include="Example.cs" />
@@ -224,6 +230,9 @@
     <Compile Include="Module\ScriptManager\Views\ScriptManagerView.xaml.cs">
       <DependentUpon>ScriptManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Module\Shell\Commands\AboutItemCommandHandler.cs" />
+    <Compile Include="Module\Shell\Commands\AboutItemCommandDefinition.cs" />
+    <Compile Include="Module\Shell\MenuDefinitions.cs" />
     <Compile Include="Module\Shell\ViewModels\ApplicationSettingsViewModel.cs" />
     <Compile Include="Module\Shell\ViewModels\ShellViewModel.cs" />
     <Compile Include="Module\Shell\Views\ApplicationSettingsView.xaml.cs">

@@ -18,5 +18,8 @@ namespace LightenDark.Studio.Module.CefBrowser
 
         [Export]
         public static MenuItemDefinition BrowserSourceCodeItem = new CommandMenuItemDefinition<BrowserSourceCodeItemDefinition>(BrowserGroup, 1);
+
+        [Export]
+        public static MenuItemDefinition BrowserDeveloperToolItem = new CommandMenuItemDefinition<BrowserDeveloperToolItemDefition>(BrowserGroup, 2);
     }
 }

@@ -28,7 +28,7 @@ namespace LightenDark.Studio.Module.CefBrowser
 
 #if DEBUG
 
-            var sample = new GeminiTester.Scripts.MiningScript();
+            var sample = new GeminiTester.Scripts.TestScript();
             manager.Items.Add(sample);
             manager.SelectedItem = sample;
 #endif

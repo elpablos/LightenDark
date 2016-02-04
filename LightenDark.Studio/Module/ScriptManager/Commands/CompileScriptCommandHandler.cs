@@ -57,11 +57,17 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
             string script = System.IO.File.ReadAllText(document.FilePath);
             lock (ScriptManager.Items)
             {
+                // kill all scripts before clear
+                foreach (var s in ScriptManager.Items)
+                {
+                    s.Stop(true);
+                }
+
                 ScriptManager.Items.Clear();
 
                 var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
                 var newAssembly = Compiler.Compile(
-                     new[] { CSharpSyntaxTree.ParseText(script) },
+                     new[] { CSharpSyntaxTree.ParseText(script, CSharpParseOptions.Default, document.FilePath) },
                      new[]
                          {
                             MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),

@@ -1,6 +1,9 @@
 ﻿using CefSharp;
 using Gemini.Modules.ErrorList;
 using Gemini.Modules.Output;
+using LightenDark.Api.Args;
+using LightenDark.Api.Interfaces;
+using LightenDark.Api.Types;
 using LightenDark.Module.Console;
 using System;
 using System.Collections.Generic;
@@ -34,7 +37,7 @@ namespace LightenDark.Studio.Core
         /// <param name="data"></param>
         public void LogWebSocketData(string data)
         {
-            BoundMessageHandler(this, new BoundEventArgs(BoundEnum.In, data));
+            BoundMessageHandler(this, new BoundEventArgs(BoundType.In, data));
             Console.AddItem(ConsoleListItemType.Incoming, data);
         }
 
@@ -44,21 +47,10 @@ namespace LightenDark.Studio.Core
         /// <param name="data"></param>
         public void LogWebSocketSend(string data)
         {
-            BoundMessageHandler(this, new BoundEventArgs(BoundEnum.Out, data));
+            BoundMessageHandler(this, new BoundEventArgs(BoundType.Out, data));
             Console.AddItem(ConsoleListItemType.Outgoing, data);
         }
     }
 
-    public class BoundEventArgs
-    {
-        public BoundEnum BoundType { get; }
 
-        public string Message { get; }
-
-        public BoundEventArgs(BoundEnum boundType, string message)
-        {
-            BoundType = boundType;
-            Message = message;
-        }
-    }
 }

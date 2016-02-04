@@ -75,6 +75,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ClearCommandDefinition.cs" />
+    <Compile Include="Commands\ClearCommandHandler.cs" />
     <Compile Include="Commands\ToggleConsoleCommandHandler.cs" />
     <Compile Include="Commands\ToggleIncomingCommandDefinition.cs" />
     <Compile Include="Commands\ToggleOutgoingCommandDefinition.cs" />
@@ -120,7 +122,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Resource Include="Resources\Clear.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

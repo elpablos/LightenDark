@@ -66,6 +66,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Extensions" />
@@ -77,15 +81,107 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Args\BoundEventArgs.cs" />
+    <Compile Include="CodeBooks\ArmorCodeBook.cs" />
     <Compile Include="Args\GameEventArgs.cs" />
+    <Compile Include="CodeBooks\JewelCodeBook.cs" />
+    <Compile Include="CodeBooks\MaterialCodeBook.cs" />
+    <Compile Include="CodeBooks\MonsterFamilyCodeBook.cs" />
+    <Compile Include="CodeBooks\WeaponCodeBook.cs" />
     <Compile Include="DynamicJsonConverter.cs" />
-    <Compile Include="Example.cs" />
+    <Compile Include="Interfaces\IBoundClass.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IWorld.cs" />
     <Compile Include="IScript.cs" />
+    <Compile Include="Models\AffectModel.cs" />
+    <Compile Include="Models\ArmorModel.cs" />
+    <Compile Include="Models\BuyCraftItemModel.cs" />
+    <Compile Include="Models\ChatMessageModel.cs" />
+    <Compile Include="Models\CraftRequirementModel.cs" />
+    <Compile Include="Models\DamageWrapperModel.cs" />
+    <Compile Include="Models\EnchantmentModel.cs" />
+    <Compile Include="Models\EquipSetModel.cs" />
+    <Compile Include="Models\GameCharacterDataModel.cs" />
+    <Compile Include="Models\InventoryModel.cs" />
+    <Compile Include="Models\JewelModel.cs" />
+    <Compile Include="Models\MaterialModel.cs" />
+    <Compile Include="Models\MonsterSpawnModel.cs" />
+    <Compile Include="Models\PlayerGraveModel.cs" />
+    <Compile Include="Models\SpellCastModel.cs" />
+    <Compile Include="Response\ResponseByeMessage.cs" />
+    <Compile Include="Response\ResponseCastSpell.cs" />
+    <Compile Include="Response\ResponseGmAllSpawn.cs" />
+    <Compile Include="Models\SkillSetModel.cs" />
+    <Compile Include="Models\WeaponModel.cs" />
+    <Compile Include="Request\RequestAutoAttack.cs" />
+    <Compile Include="Request\RequestModelBase.cs" />
+    <Compile Include="Request\RequestLogin.cs" />
+    <Compile Include="Response\ResponseAffectChange.cs" />
+    <Compile Include="Response\ResponseAugment.cs" />
+    <Compile Include="Response\ResponseBankOperation.cs" />
+    <Compile Include="Response\ResponseBuyList.cs" />
+    <Compile Include="Response\ResponseCharacterAction.cs" />
+    <Compile Include="Response\ResponseChatMessage.cs" />
+    <Compile Include="Response\ResponseCraftList.cs" />
+    <Compile Include="Response\ResponseExperienceGoldChanged.cs" />
+    <Compile Include="Response\ResponseGmInit.cs" />
+    <Compile Include="Response\ResponseGmMessage.cs" />
+    <Compile Include="Response\ResponseHeal.cs" />
+    <Compile Include="Response\ResponseHunting.cs" />
+    <Compile Include="Response\ResponseInventoryChanged.cs" />
+    <Compile Include="Response\ResponseCharacterHpMpChanged.cs" />
+    <Compile Include="Response\ResponseCharacterData.cs" />
+    <Compile Include="Response\ResponseCodeBook.cs" />
+    <Compile Include="Response\ResponseItemAction.cs" />
+    <Compile Include="Response\ResponseItemDamaged.cs" />
+    <Compile Include="Response\ResponseLevelUp.cs" />
+    <Compile Include="Response\ResponseLoadBank.cs" />
+    <Compile Include="Response\ResponseLoadLoot.cs" />
+    <Compile Include="Response\ResponseLogin.cs" />
+    <Compile Include="Response\ResponseLootOperation.cs" />
+    <Compile Include="Response\ResponseMapData.cs" />
+    <Compile Include="Response\ResponseMapStaticCodeBook.cs" />
+    <Compile Include="Response\ResponseMessageBoardContent.cs" />
+    <Compile Include="Response\ResponseMobDamaged.cs" />
+    <Compile Include="Response\ResponseMobData.cs" />
+    <Compile Include="Response\ResponseMobMove.cs" />
+    <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Response\ResponseAttack.cs" />
+    <Compile Include="Response\ResponseMovement.cs" />
+    <Compile Include="Response\ResponseNpcBuy.cs" />
+    <Compile Include="Response\ResponseNpcChat.cs" />
+    <Compile Include="Response\ResponseNpcData.cs" />
+    <Compile Include="Response\ResponseNpcQuest.cs" />
+    <Compile Include="Response\ResponseOffer.cs" />
+    <Compile Include="Response\ResponseOrphanItems.cs" />
+    <Compile Include="Response\ResponsePartyData.cs" />
+    <Compile Include="Response\ResponsePlayerGraveChanged.cs" />
+    <Compile Include="Response\ResponsePlayerGraves.cs" />
+    <Compile Include="Response\ResponsePlayerInfo.cs" />
+    <Compile Include="Response\ResponsePowerEnchant.cs" />
+    <Compile Include="Response\ResponseSendMessage.cs" />
+    <Compile Include="Response\ResponseSkillSetChanged.cs" />
+    <Compile Include="Response\ResponseStaticObjectChange.cs" />
+    <Compile Include="Response\ResponseTradeOperation.cs" />
+    <Compile Include="Response\ResponseWorldSave.cs" />
     <Compile Include="ScriptBase.cs" />
+    <Compile Include="Models\GameCharacterModel.cs" />
+    <Compile Include="Types\ActionBasicType.cs" />
+    <Compile Include="Types\BoundType.cs" />
+    <Compile Include="Types\CodeBookTypes.cs" />
+    <Compile Include="Types\GartheringType.cs" />
+    <Compile Include="Types\RequestTypes.cs" />
+    <Compile Include="Types\ResponseTypes.cs" />
+    <Compile Include="Types\SpecialskillType.cs" />
+    <Compile Include="Types\SpellType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

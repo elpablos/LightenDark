@@ -21,7 +21,8 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
     [Export(typeof(ICefBrowserViewModel))]
     public class CefBrowserViewModel : Document, ICefBrowserViewModel, 
         ICommandHandler<BrowserReloadItemDefinition>,
-        ICommandHandler<BrowserSourceCodeItemDefinition>
+        ICommandHandler<BrowserSourceCodeItemDefinition>,
+        ICommandHandler<BrowserDeveloperToolItemDefition>
     {
         #region Fields
 
@@ -217,6 +218,20 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         Task ICommandHandler<BrowserSourceCodeItemDefinition>.Run(Command command)
         {
             WebBrowser.ViewSource();
+            return TaskUtility.Completed;
+        }
+
+        #endregion
+
+        #region BrowserDeveloperToolItemDefition
+
+        void ICommandHandler<BrowserDeveloperToolItemDefition>.Update(Command command)
+        {
+        }
+
+        Task ICommandHandler<BrowserDeveloperToolItemDefition>.Run(Command command)
+        {
+            WebBrowser.ShowDevTools();
             return TaskUtility.Completed;
         }
 
