@@ -57,6 +57,12 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
             string script = System.IO.File.ReadAllText(document.FilePath);
             lock (ScriptManager.Items)
             {
+                // kill all scripts before clear
+                foreach (var s in ScriptManager.Items)
+                {
+                    s.Stop(true);
+                }
+
                 ScriptManager.Items.Clear();
 
                 var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);

@@ -28,7 +28,7 @@ namespace LightenDark.Api.Interfaces
         [Obsolete]
         void SendJavaScript(string message);
 
-        CancellationTokenSource CancelTokenSource { get; }
+        // CancellationTokenSource CancelTokenSource { get; }
 
         /// <summary>
         /// Raw messages from server

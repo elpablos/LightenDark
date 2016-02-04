@@ -104,6 +104,10 @@
       <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Gat.Controls.AboutBox, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AboutBox.2.0.0\lib\net45\Gat.Controls.AboutBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.0.0.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -226,6 +230,9 @@
     <Compile Include="Module\ScriptManager\Views\ScriptManagerView.xaml.cs">
       <DependentUpon>ScriptManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Module\Shell\Commands\AboutItemCommandHandler.cs" />
+    <Compile Include="Module\Shell\Commands\AboutItemCommandDefinition.cs" />
+    <Compile Include="Module\Shell\MenuDefinitions.cs" />
     <Compile Include="Module\Shell\ViewModels\ApplicationSettingsViewModel.cs" />
     <Compile Include="Module\Shell\ViewModels\ShellViewModel.cs" />
     <Compile Include="Module\Shell\Views\ApplicationSettingsView.xaml.cs">

@@ -60,7 +60,7 @@ namespace LightenDark.Api
                     run = false;
                 }
                 ReleaseLock();
-                Game.CancelTokenSource.Cancel(false);
+                // Game.CancelTokenSource.Cancel(false);
                 if (isForce)
                 {
                     thread.Abort();

@@ -369,10 +369,10 @@ namespace LightenDark.Studio.Core.Impl
 
         #region ResponseLoop
 
-        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-        public CancellationToken CancelToken { get { return CancelTokenSource.Token; } }
+        // private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        public CancellationToken CancelToken { get { return CancellationToken.None; } }
 
-        public CancellationTokenSource CancelTokenSource { get { return cancelTokenSource; } }
+        // public CancellationTokenSource CancelTokenSource { get { return cancelTokenSource; } }
 
         public async Task<T> ResponseWaitBase<T>(
             Action body,
