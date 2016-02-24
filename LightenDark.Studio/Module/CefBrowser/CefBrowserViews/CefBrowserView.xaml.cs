@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Hardcodet.Wpf.TaskbarNotification;
 using LightenDark.Api.Interfaces;
 using System.Windows.Controls;
 
@@ -9,6 +10,8 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViews
     /// </summary>
     public partial class CefBrowserView : UserControl
     {
+        public TaskbarIcon TaskbarIcon { get; private set; }
+
         public CefBrowserView()
         {
             InitializeComponent();
@@ -17,6 +20,9 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViews
             // so that is the reason why i'm doing here and not un ViewModel
             IBoundClass boundClass = IoC.Get<IBoundClass>();
             browser.RegisterJsObject("bound", boundClass);
+
+            //initialize NotifyIcon
+            TaskbarIcon = (TaskbarIcon)((App)System.Windows.Application.Current).FindResource("NotifyIcon");
         }
     }
 }

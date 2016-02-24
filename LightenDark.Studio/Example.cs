@@ -90,6 +90,8 @@ namespace GeminiTester.Scripts
             await Game.Player.MoveLeftAsync();
             if (!run) return;
 
+            Game.ShowBubble("Nadpis", "text");
+
             //// Game.Player.MoveUp();
             LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);
 

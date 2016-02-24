@@ -1,4 +1,5 @@
-﻿using Gemini.Modules.Output;
+﻿using Caliburn.Micro;
+using Gemini.Modules.Output;
 using Gemini.Modules.PropertyGrid;
 using LightenDark.Api;
 using LightenDark.Api.Args;
@@ -47,6 +48,9 @@ namespace LightenDark.Studio.Core.Impl
                 if (Browser != null) OnBrowserBound();
             }
         }
+
+        [Import]
+        public IEventAggregator EventAggregator { get; set; }
 
         #endregion
 
@@ -344,6 +348,11 @@ namespace LightenDark.Studio.Core.Impl
             Output.AppendLine(message);
         }
 
+        public void ShowBubble(string title, string message)
+        {
+            EventAggregator.PublishOnUIThread(new Module.CefBrowser.Handlers.NotifyIconMessage(title, message));
+        }
+
         #endregion
 
         #region Game methods
@@ -385,7 +394,7 @@ namespace LightenDark.Studio.Core.Impl
         }
 
         public async Task<T> ResponseWaitBase<T>(
-            Action body,
+            System.Action body,
             EventHandler<T> responseBeforeHandler,
             string eventName,
             int timeout = Timeout.Infinite)

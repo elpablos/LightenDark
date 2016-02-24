@@ -69,6 +69,14 @@ namespace LightenDark.Api.Interfaces
         /// </summary>
         /// <param name="message"></param>
         void OutputWrite(string message);
+
+        /// <summary>
+        /// Show bubble
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        void ShowBubble(string title, string message);
+
         void Login(string login, string password);
 
         Task<T> ResponseWaitBase<T>(

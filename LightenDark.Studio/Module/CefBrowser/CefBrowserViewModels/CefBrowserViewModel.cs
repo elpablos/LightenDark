@@ -1,12 +1,15 @@
-﻿using CefSharp;
+﻿using Caliburn.Micro;
+using CefSharp;
 using CefSharp.Wpf;
 using Gemini.Framework;
 using Gemini.Framework.Commands;
 using Gemini.Framework.Threading;
 using Gemini.Modules.ErrorList;
 using Gemini.Modules.Output;
+using Hardcodet.Wpf.TaskbarNotification;
 using LightenDark.Module.Console;
 using LightenDark.Studio.Module.CefBrowser.Commands;
+using LightenDark.Studio.Module.CefBrowser.Handlers;
 using LightenDark.Studio.Module.ScriptManager;
 using System;
 using System.Collections.Generic;
@@ -22,7 +25,8 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
     public class CefBrowserViewModel : Document, ICefBrowserViewModel, 
         ICommandHandler<BrowserReloadItemDefinition>,
         ICommandHandler<BrowserSourceCodeItemDefinition>,
-        ICommandHandler<BrowserDeveloperToolItemDefition>
+        ICommandHandler<BrowserDeveloperToolItemDefition>,
+        Caliburn.Micro.IHandle<NotifyIconMessage>
     {
         #region Fields
 
@@ -56,13 +60,20 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         [Import]
         public IScriptManager ScriptManager { get; set; }
 
+        public TaskbarIcon TaskbarIcon { get; set; }
+
+        public IEventAggregator EventAggregator { get; set; }
+
         #endregion
 
         #region Constructor
 
-        public CefBrowserViewModel()
+        [ImportingConstructor]
+        public CefBrowserViewModel(IEventAggregator aggregator)
         {
             DisplayName = "Game";
+            EventAggregator = aggregator;
+            aggregator.Subscribe(this);
         }
 
         #endregion
@@ -72,6 +83,17 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         public override bool ShouldReopenOnStart
         {
             get { return true; }
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+            var cefView = view as CefBrowserViews.CefBrowserView;
+            if (cefView != null)
+            {
+                TaskbarIcon = cefView.TaskbarIcon;
+            }
+
         }
 
         protected override void OnInitialize()
@@ -86,6 +108,18 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         public override void SaveState(BinaryWriter writer)
         {
             // base.SaveState(writer);
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+            if (close)
+            {
+                foreach (var item in ScriptManager.Items)
+                {
+                    item.Stop(true);
+                }
+            }
         }
 
         #endregion
@@ -237,18 +271,16 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 
         #endregion
 
-        protected override void OnDeactivate(bool close)
+        #region INofityIcon
+
+        public void Handle(NotifyIconMessage message)
         {
-            base.OnDeactivate(close);
-            if (close)
+            if (TaskbarIcon != null)
             {
-                foreach (var item in ScriptManager.Items)
-                {
-                    item.Stop(true);
-                }
+                TaskbarIcon.ShowBalloonTip(message.Title, message.Message, BalloonIcon.Info);
             }
-
-
         }
+
+        #endregion
     }
 }
