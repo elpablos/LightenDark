@@ -90,5 +90,10 @@ namespace LightenDark.Api.Models
         /// </summary>
         [JsonProperty(PropertyName = "prc")]
         public int Price { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", ID, DisplayName);
+        }
     }
 }

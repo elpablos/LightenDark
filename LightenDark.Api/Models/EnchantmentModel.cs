@@ -38,5 +38,10 @@ namespace LightenDark.Api.Models
         /// </summary>
         [JsonProperty(PropertyName = "color")]
         public byte Color { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", ID, DisplayName);
+        }
     }
 }

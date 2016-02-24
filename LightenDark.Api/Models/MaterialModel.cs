@@ -28,18 +28,23 @@ namespace LightenDark.Api.Models
         ///  ID materialu z vyctu materialu
         /// </summary>
         [JsonProperty(PropertyName = "cbMaterialId")]
-        private int MaterialTypeID { get; set; }
+        public int MaterialTypeID { get; set; }
 
         /// <summary>
         /// Název
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        private String DisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Popis
         /// </summary>
         [JsonProperty(PropertyName = "desc")]
-        private String Description { get; set; }
+        public string Description { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", ID, DisplayName);
+        }
     }
 }

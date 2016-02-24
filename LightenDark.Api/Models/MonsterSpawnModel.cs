@@ -13,7 +13,7 @@ namespace LightenDark.Api.Models
         /// Identifikator
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         // Umisteni
         [JsonProperty(PropertyName = "x")]
@@ -68,6 +68,11 @@ namespace LightenDark.Api.Models
         /// Název
         /// </summary>
         [JsonProperty(PropertyName = "name")]
-        public String displayName { get; set; }
+        public string DisplayName { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", ID, DisplayName);
+        }
     }
 }

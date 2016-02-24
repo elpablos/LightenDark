@@ -16,19 +16,19 @@ namespace LightenDark.Api.Models
         /// Typ afektu
         /// </summary>
         [JsonProperty(PropertyName = "type")]
-        protected short Type { get; set; }
+        public short Type { get; set; }
 
         /// <summary>
         /// Zbyvajici cas
         /// </summary>
         [JsonProperty(PropertyName = "rem")]
-        protected short RemainTime { get; set; }
+        public short RemainTime { get; set; }
 
         /// <summary>
         /// Level afektu
         /// </summary>
         [JsonProperty(PropertyName = "lvl")]
-        protected short lvl { get; set; }
+        public short lvl { get; set; }
 
     }
 }
