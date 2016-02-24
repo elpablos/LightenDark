@@ -184,6 +184,8 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
                     var browser = webBrowser.GetBrowser();
                     browser.MainFrame.EvaluateScriptAsync(script);
 
+                    Handle(new NotifyIconMessage("ApplicationStart.js", "Javascript file is loaded"));
+
                     isIncludeLoginBefore = true;
                 }
 
@@ -238,6 +240,7 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         Task ICommandHandler<BrowserReloadItemDefinition>.Run(Command command)
         {
             WebBrowser.Reload(true);
+            isIncludeLoginBefore = false;
             return TaskUtility.Completed;
         }
 
