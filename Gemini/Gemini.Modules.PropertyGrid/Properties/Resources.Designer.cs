@@ -61,6 +61,24 @@ namespace Gemini.Modules.PropertyGrid.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string ResetCommandText {
+            get {
+                return ResourceManager.GetString("ResetCommandText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string ResetCommandToolTip {
+            get {
+                return ResourceManager.GetString("ResetCommandToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Properties _Window.
         /// </summary>
         internal static string ViewPropertyGridCommandText {
