@@ -26,7 +26,7 @@ namespace GeminiTester.Scripts
         /// <summary>
         /// Main loop
         /// </summary>
-        protected override async void Run()
+        protected override async Task Run()
         {
             //// init
             DateTime start = DateTime.Now;
@@ -40,32 +40,55 @@ namespace GeminiTester.Scripts
             //Game.Player.MoveLeftAsync().Wait();
             //LogMessage("Left finished");
 
+            //var gloves = Game.Player.Inventory.Armors.Where(a => a.ArmorTypeID == 203);
+            //if (gloves != null && gloves.Count() > 0)
+            //{
+            //    LogMessage("Gloves " + gloves.Count());
+
+            //    var ids = gloves.Select(g => g.ID).ToArray();
+            //    foreach (var id in ids)
+            //    {
+            //        string js = string.Format("ws.send('{{\"type\":88,\"itemCode\":10203,\"npcId\":2,\"id\":{0}}}');", id);
+            //        Game.SendJavaScript(js);
+            //        await Task.Delay(1000);
+            //    }
+            //}
 
             LogMessage("Start first");
 
             await Game.Player.MoveUpAsync();
+            if (!run) return;
             await Game.Player.MoveUpAsync();
+            if (!run) return;
             await Game.Player.MoveUpAsync();
+            if (!run) return;
 
             LogMessage("Start second");
 
             await Game.Player.MoveRightAsync();
+            if (!run) return;
             await Game.Player.MoveRightAsync();
+            if (!run) return;
             await Game.Player.MoveRightAsync();
+            if (!run) return;
 
             LogMessage("Start third");
 
             await Game.Player.MoveDownAsync();
+            if (!run) return;
             await Game.Player.MoveDownAsync();
+            if (!run) return;
             await Game.Player.MoveDownAsync();
+            if (!run) return;
 
             LogMessage("Start fourth");
 
             await Game.Player.MoveLeftAsync();
+            if (!run) return;
             await Game.Player.MoveLeftAsync();
+            if (!run) return;
             await Game.Player.MoveLeftAsync();
-            //Game.Player.MoveDown();
-            //Thread.Sleep(1000);
+            if (!run) return;
 
             //// Game.Player.MoveUp();
             LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);

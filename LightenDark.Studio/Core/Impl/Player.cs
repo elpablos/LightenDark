@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace LightenDark.Studio.Core.Impl
 {
+    /// <summary>
+    /// Implementace objektu reprezentujici hrace
+    /// </summary>
     [Export(typeof(IPlayer))]
     public class Player : PropertyChangedBase, IPlayer
     {
@@ -100,8 +103,11 @@ namespace LightenDark.Studio.Core.Impl
 
         private void Game_EventMovement(object sender, Api.Response.ResponseMovement e)
         {
-            Xpos = e.XPos;
-            Ypos = e.YPos;
+            if (e.ID == ID)
+            {
+                Xpos = e.XPos;
+                Ypos = e.YPos;
+            }
         }
 
         private void Game_EventSkillSetChanged(object sender, Api.Response.ResponseSkillSetChanged e)
@@ -161,10 +167,13 @@ namespace LightenDark.Studio.Core.Impl
 
         private void Game_EventCharacterHpMpChanged(object sender, Api.Response.ResponseCharacterHpMpChanged e)
         {
-            Hp = e.Hp;
-            Mp = e.Mp;
-            LawStatus = e.LawStatus;
-            // e.DOTDamage;
+            if (e.ID == ID)
+            {
+                Hp = e.Hp;
+                Mp = e.Mp;
+                LawStatus = e.LawStatus;
+                // e.DOTDamage;
+            }
         }
 
         /// <summary>
@@ -174,9 +183,13 @@ namespace LightenDark.Studio.Core.Impl
         /// <param name="e"></param>
         private void Game_EventCharacterData(object sender, Api.Response.ResponseCharacterData e)
         {
-            Xpos = e.XPos;
-            Ypos = e.YPos;
-            Hp = e.Hp;
+            if (e.ID == ID)
+            {
+                Xpos = e.XPos;
+                Ypos = e.YPos;
+                Hp = e.Hp;
+            }
+
         }
 
         private void Game_EventLogin(object sender, Api.Response.ResponseLogin e)
@@ -235,22 +248,22 @@ namespace LightenDark.Studio.Core.Impl
 
         public Task<ResponseMovement> MoveRightAsync(int timeout = Timeout.Infinite)
         {
-            return MovementBaseAsync(MoveRight);
+            return MovementBaseAsync(MoveRight, timeout);
         }
 
         public Task<ResponseMovement> MoveLeftAsync(int timeout = Timeout.Infinite)
         {
-            return MovementBaseAsync(MoveLeft);
+            return MovementBaseAsync(MoveLeft, timeout);
         }
 
         public Task<ResponseMovement> MoveDownAsync(int timeout = Timeout.Infinite)
         {
-            return MovementBaseAsync(MoveDown);
+            return MovementBaseAsync(MoveDown, timeout);
         }
 
         public Task<ResponseMovement> MoveUpAsync(int timeout = Timeout.Infinite)
         {
-            return MovementBaseAsync(MoveUp);
+            return MovementBaseAsync(MoveUp, timeout);
         }
 
         private Task<ResponseMovement> MovementBaseAsync(System.Action action, int timeout = Timeout.Infinite)
@@ -297,7 +310,7 @@ namespace LightenDark.Studio.Core.Impl
             ActionBasic((int)type);
         }
 
-        public void ActionBasic(GartheringType type)
+        public void Garthering(GartheringType type)
         {
             Garthering((int)type);
         }
@@ -309,7 +322,7 @@ namespace LightenDark.Studio.Core.Impl
 
         public void Garthering(int type)
         {
-            string js = string.Format("ws.send('{{\"type\":83,\"skillType\":{0}}}');", type);
+            string js = string.Format("ws.send('{{\"type\":66,\"gatherType\":{0}}}');", type);
             game.SendJavaScript(js);
         }
 
@@ -338,7 +351,7 @@ namespace LightenDark.Studio.Core.Impl
                 async (s, e) =>
                 {
                     // wait for casting time
-                    await Task.Delay((int)e.CastingTime);
+                    await Task.Delay((int)e.CastingTime, game.CancelToken);
                 }, "EventCastSpell", timeout);
         }
 

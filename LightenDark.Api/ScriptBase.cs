@@ -35,7 +35,7 @@ namespace LightenDark.Api
         public void Start()
         {
             Game.GameMessage += Game_GameMessage;
-            // Game.CancelTokenSource.Token.
+            Game.CancelTokenSource = new CancellationTokenSource();
             thread = new Thread(new ThreadStart(AbstractRun));
 
             //Task t = new Task(AbstractRun);
@@ -50,10 +50,11 @@ namespace LightenDark.Api
 
         public void Stop(bool isForce)
         {
-            if (thread != null && thread.IsAlive)
+            if (thread != null) //  && thread.IsAlive
             {
                 BeforeStop();
 
+                Game.CancelTokenSource.Cancel();
                 Game.GameMessage -= Game_GameMessage;
                 lock (obj)
                 {
@@ -72,20 +73,25 @@ namespace LightenDark.Api
 
         #region Main loop
 
-        protected abstract void Run();
+        protected abstract Task Run();
 
         protected virtual void BeforeStop() { }
 
         protected virtual void Game_GameMessage(object sender, Args.GameEventArgs e) { }
 
-        private void AbstractRun()
+        private async void AbstractRun()
         {
             LogMessage(string.Format("start skriptu '{0}'", DisplayName));
 
-            Run();
-
+            try
+            {
+                await Run();
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Exception: " + ex.Message);
+            }
             LogMessage(string.Format("konec skriptu '{0}'", DisplayName));
-
         }
 
         #endregion
@@ -121,9 +127,9 @@ namespace LightenDark.Api
             lock (obj) Monitor.Pulse(obj);
         }
 
-        protected void Sleep(int time)
+        protected async void Sleep(int time)
         {
-            Thread.Sleep(time);
+            await Task.Delay(time);
         }
 
         #endregion

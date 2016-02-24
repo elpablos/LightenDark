@@ -5,6 +5,9 @@ using LightenDark.Api.Models;
 
 namespace LightenDark.Studio.Core.Impl
 {
+    /// <summary>
+    /// Implementace objektu reprezentujici svet DarkenLight
+    /// </summary>
     public class World : IWorld
     {
         #region Fields
@@ -30,6 +33,8 @@ namespace LightenDark.Studio.Core.Impl
 
         #endregion
 
+        #region Constructors
+
         public World(Game game)
         {
             this.game = game;
@@ -42,6 +47,10 @@ namespace LightenDark.Studio.Core.Impl
             game.EventMapData += Game_EventMapData;
             game.EventNpcData += Game_EventNpcData;
         }
+
+        #endregion
+
+        #region Game events
 
         private void Game_EventNpcData(object sender, Api.Response.ResponseNpcData e)
         {
@@ -93,5 +102,7 @@ namespace LightenDark.Studio.Core.Impl
             Ypos = e.Ypos;
             Statics = e.Statics;
         }
+
+        #endregion
     }
 }

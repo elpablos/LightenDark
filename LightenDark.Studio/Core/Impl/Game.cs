@@ -18,6 +18,9 @@ using System.Threading.Tasks;
 
 namespace LightenDark.Studio.Core.Impl
 {
+    /// <summary>
+    /// Implementace objektu reprezentujici hru Darkenlight
+    /// </summary>
     [Export(typeof(IGame))]
     public class Game : IGame
     {
@@ -332,7 +335,7 @@ namespace LightenDark.Studio.Core.Impl
 
         public void SendJavaScript(string message)
         {
-            OutputWrite("JS: "+ message);
+            OutputWrite("JS: " + message);
             Browser.ExecuteJavaScriptAsync(message);
         }
 
@@ -369,15 +372,22 @@ namespace LightenDark.Studio.Core.Impl
 
         #region ResponseLoop
 
-        // private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-        public CancellationToken CancelToken { get { return CancellationToken.None; } }
+        private CancellationTokenSource cancelTokenSource = null;
+        public CancellationToken CancelToken
+        {
+            get { return cancelTokenSource != null ? cancelTokenSource.Token : CancellationToken.None; }
+        }
 
-        // public CancellationTokenSource CancelTokenSource { get { return cancelTokenSource; } }
+        public CancellationTokenSource CancelTokenSource
+        {
+            get { return cancelTokenSource; }
+            set { cancelTokenSource = value; }
+        }
 
         public async Task<T> ResponseWaitBase<T>(
             Action body,
-            EventHandler<T> responseBeforeHandler, 
-            string eventName, 
+            EventHandler<T> responseBeforeHandler,
+            string eventName,
             int timeout = Timeout.Infinite)
         where T : ResponseBase
         {
@@ -400,10 +410,12 @@ namespace LightenDark.Studio.Core.Impl
                 newToken = CancelToken;
 
             // register cancelation
-            newToken.Register(() => tcs.SetCanceled(), useSynchronizationContext: false);
+            newToken.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
             EventHandler<T> handler = null;
             handler = (s, e) =>
             {
+                eventRem.Invoke(this, new object[] { handler });
+
                 if (e.Cancelled)
                 {
                     // while cancel
@@ -418,12 +430,12 @@ namespace LightenDark.Studio.Core.Impl
                 {
                     // do some actions before return data
                     if (responseBeforeHandler != null)
-                       responseBeforeHandler(s, e);
-                    tcs.SetResult(e);
+                        responseBeforeHandler(s, e);
+                    tcs.TrySetResult(e);
                 }
-                eventRem.Invoke(this, new object[] { handler });
+
             };
-            
+
             eventAdd.Invoke(this, new object[] { handler });
             await Task.Delay(500); // needed delay! 
 

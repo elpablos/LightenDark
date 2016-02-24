@@ -28,7 +28,7 @@ namespace LightenDark.Api.Interfaces
         [Obsolete]
         void SendJavaScript(string message);
 
-        // CancellationTokenSource CancelTokenSource { get; }
+        CancellationTokenSource CancelTokenSource { get; set; }
 
         /// <summary>
         /// Raw messages from server
@@ -70,5 +70,12 @@ namespace LightenDark.Api.Interfaces
         /// <param name="message"></param>
         void OutputWrite(string message);
         void Login(string login, string password);
+
+        Task<T> ResponseWaitBase<T>(
+            Action body,
+            EventHandler<T> responseBeforeHandler,
+            string eventName,
+            int timeout = Timeout.Infinite)
+        where T : ResponseBase;
     }
 }

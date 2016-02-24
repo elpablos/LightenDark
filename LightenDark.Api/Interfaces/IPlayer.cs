@@ -32,15 +32,17 @@ namespace LightenDark.Api.Interfaces
         void Meditation();
         void Remedy(int characterID);
         void SendMessage(string text, string type);
-        void Specialskill(int type);
+
         void Stop();
         Task<ResponseCastSpell> CastSpellAsync(int chrTgt, int mobTgt, int spell, int timeout = Timeout.Infinite);
 
         void ActionBasic(int type);
-        void ActionBasic(GartheringType type);
-        void ActionBasic(ActionBasicType type);
         void Garthering(int type);
-        void MoveDown();
+        void Specialskill(int type);
+
+        void Garthering(GartheringType type);
+        void ActionBasic(ActionBasicType type);
+        void Specialskill(SpecialskillType type);
 
         Task<ResponseMovement> MoveDownAsync(int timeout = -1);
         Task<ResponseMovement> MoveLeftAsync(int timeout = -1);
