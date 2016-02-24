@@ -195,6 +195,9 @@ namespace LightenDark.Studio.Core.Impl
         private void Game_EventLogin(object sender, Api.Response.ResponseLogin e)
         {
             ID = e.CharacterID;
+            Hp = e.GameCharacter.HitPoints;
+            Mp = e.GameCharacter.Mana;
+            LawStatus = e.GameCharacter.LawStatus;
             GameCharacter = e.GameCharacter;
             GameCharacterData = e.GameCharacterData;
             Inventory = e.Inventory;
