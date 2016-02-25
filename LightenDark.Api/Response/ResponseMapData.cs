@@ -37,7 +37,7 @@ namespace LightenDark.Api.Response
         /// static objekty
         /// </summary>
         [JsonProperty(PropertyName = "statics")]
-        public List<string> Statics { get; set; }
+        public List<string> StaticsRaw { get; set; }
 
         /// <summary>
         /// Itemy na zemi
@@ -50,5 +50,11 @@ namespace LightenDark.Api.Response
         /// </summary>
         [JsonProperty(PropertyName = "playerGraves")]
         public List<PlayerGraveModel> PlayerGraves { get; set; }
+
+        /// <summary>
+        /// Statiky
+        /// </summary>
+        [JsonIgnore]
+        public List<StaticModel> Statics { get; set; }
     }
 }

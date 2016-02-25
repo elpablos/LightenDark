@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Gemini.Framework.Services;
+using Gemini.Modules.PropertyGrid;
 using Gemini.Modules.Shell.Views;
 using LightenDark.Studio.Properties;
 using System;

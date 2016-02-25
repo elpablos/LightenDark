@@ -70,18 +70,32 @@ namespace LightenDark.Api.Response
         /// Statické objekty
         /// </summary>
         [JsonProperty(PropertyName = "statics")]
-        public List<string> Statics { get; set; }
+        public List<string> StaticsRaw { get; set; }
 
         /// <summary>
         /// Podkladova mapa celeho sveta
+        /// POZOR! zkomprimovana pomoci GZIP!
+        /// Pouzij WorldMap misto tohoto!
         /// </summary>
         [JsonProperty(PropertyName = "worldMap")]
-        public int[] WorldMap { get; set; }
+        public sbyte[] WorldMapRaw { get; set; }
 
         /// <summary>
         /// Zprava pokud se prihlaseni nepovedlo
         /// </summary>
         [JsonProperty(PropertyName = "message")]
-        private string Message { get; set; }
+        public string Message { get; set; }
+
+        /// <summary>
+        /// Mapa, vraci TileTypes
+        /// </summary>
+        [JsonIgnore]
+        public int[][] WorldMap { get; set; }
+
+        /// <summary>
+        /// Statiky
+        /// </summary>
+        [JsonIgnore]
+        public List<StaticModel> Statics { get; set; }
     }
 }

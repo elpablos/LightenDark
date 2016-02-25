@@ -109,6 +109,17 @@
     <Compile Include="Models\MonsterSpawnModel.cs" />
     <Compile Include="Models\PlayerGraveModel.cs" />
     <Compile Include="Models\SpellCastModel.cs" />
+    <Compile Include="Models\StaticModel.cs" />
+    <Compile Include="PathFinder\GridPos.cs" />
+    <Compile Include="PathFinder\GridRect.cs" />
+    <Compile Include="PathFinder\Grid\BaseGrid.cs" />
+    <Compile Include="PathFinder\Grid\DynamicGrid.cs" />
+    <Compile Include="PathFinder\Grid\DynamicGridWPool.cs" />
+    <Compile Include="PathFinder\Grid\PartialGridWPool.cs" />
+    <Compile Include="PathFinder\Grid\StaticGrid.cs" />
+    <Compile Include="PathFinder\Heuristic.cs" />
+    <Compile Include="PathFinder\JumpPointFinder.cs" />
+    <Compile Include="PathFinder\NodePool.cs" />
     <Compile Include="Response\ResponseByeMessage.cs" />
     <Compile Include="Response\ResponseCastSpell.cs" />
     <Compile Include="Response\ResponseGmAllSpawn.cs" />
@@ -176,6 +187,7 @@
     <Compile Include="Types\ResponseTypes.cs" />
     <Compile Include="Types\SpecialskillType.cs" />
     <Compile Include="Types\SpellType.cs" />
+    <Compile Include="Types\TileTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />

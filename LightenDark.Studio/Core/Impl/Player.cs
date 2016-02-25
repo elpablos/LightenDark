@@ -81,6 +81,8 @@ namespace LightenDark.Studio.Core.Impl
         public int Hp { get; private set; }
         public byte LawStatus { get; private set; }
 
+        public TileTypes TileType { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -107,6 +109,7 @@ namespace LightenDark.Studio.Core.Impl
             {
                 Xpos = e.XPos;
                 Ypos = e.YPos;
+                TileType = (TileTypes)game.World.WorldMap[Xpos][Ypos];
             }
         }
 

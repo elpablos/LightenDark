@@ -4,6 +4,7 @@ using Gemini.Modules.PropertyGrid;
 using LightenDark.Api;
 using LightenDark.Api.Args;
 using LightenDark.Api.Interfaces;
+using LightenDark.Api.Models;
 using LightenDark.Api.Response;
 using LightenDark.Api.Types;
 using LightenDark.Module.Console;
@@ -12,6 +13,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -120,6 +123,7 @@ namespace LightenDark.Studio.Core.Impl
         public Game(IPropertyGrid propertyGrid)
         {
             propertyGrid.SelectedObject = this;
+            propertyGrid.Activate();
             Player = new Player(this);
             World = new World(this);
         }
@@ -142,6 +146,14 @@ namespace LightenDark.Studio.Core.Impl
                 {
                     case ResponseTypes.Login:
                         var responseLogin = JsonConvert.DeserializeObject<ResponseLogin>(e.Message);
+
+                        byte[] unsigned = (byte[])(Array)responseLogin.WorldMapRaw;
+                        var raw = ToUncompressedString(unsigned);
+                        var jsonMap = System.Text.Encoding.UTF8.GetString(raw);
+                        responseLogin.WorldMap = JsonConvert.DeserializeObject<int[][]>(jsonMap);
+
+                        responseLogin.Statics = parseStatics(responseLogin.StaticsRaw);
+
                         EventLogin(this, responseLogin);
                         break;
                     case ResponseTypes.MobMove:
@@ -269,6 +281,9 @@ namespace LightenDark.Studio.Core.Impl
                         break;
                     case ResponseTypes.MapData:
                         var responseMapData = JsonConvert.DeserializeObject<ResponseMapData>(e.Message);
+
+                        responseMapData.Statics = parseStatics(responseMapData.StaticsRaw);
+
                         EventMapData(this, responseMapData);
                         break;
                     case ResponseTypes.CharacterAction:
@@ -331,6 +346,23 @@ namespace LightenDark.Studio.Core.Impl
 
                 GameMessage(this, new GameEventArgs(e.Message));
             }
+        }
+
+        private List<StaticModel> parseStatics(List<string> statics)
+        {
+            List<StaticModel> list = new List<StaticModel>();
+            foreach (string staticMsg in statics)
+            {
+                var x = staticMsg.Split(':');
+                list.Add(new StaticModel()
+                {
+                    Xpos = int.Parse(x[0]),
+                    Ypos = int.Parse(x[1]),
+                    TypeId = int.Parse(x[2]),
+                    Message = staticMsg
+                });
+            }
+            return list;
         }
 
         #endregion
@@ -451,6 +483,34 @@ namespace LightenDark.Studio.Core.Impl
             body();
 
             return await tcs.Task;
+        }
+
+        #endregion
+
+        #region GZIP
+
+        /// <summary>
+        /// Returns the original string for a compressed base64 encoded string
+        /// http://george.chiramattel.com/blog/2007/09/deflatestream-block-length-does-not-match.html
+        /// </summary>
+        public static byte[] ToUncompressedString(byte[] compressedBytes)
+        {
+            // load the byte array into a memory stream
+            using (var inMemStream = new MemoryStream(compressedBytes))
+            {
+                // and decompress the memory stream into the original string
+                // skip first two bytes
+                inMemStream.ReadByte();
+                inMemStream.ReadByte();
+                using (var decompressionStream
+                    = new DeflateStream(inMemStream,
+                    CompressionMode.Decompress))
+                using (var mstream = new MemoryStream())
+                {
+                    decompressionStream.CopyTo(mstream);
+                    return mstream.ToArray();
+                }
+            }
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using CefSharp;
 using Gemini.Framework;
 using Gemini.Framework.Services;
+using Gemini.Modules.PropertyGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

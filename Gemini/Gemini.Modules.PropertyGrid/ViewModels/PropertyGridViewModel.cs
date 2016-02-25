@@ -75,7 +75,7 @@ namespace Gemini.Modules.PropertyGrid.ViewModels
             ToolBarDefinition = ToolBarDefinitions.PropertiesToolBar;
         }
 
-	    object ICommandRerouter.GetHandler(CommandDefinitionBase commandDefinition)
+        object ICommandRerouter.GetHandler(CommandDefinitionBase commandDefinition)
 	    {
 	        if (commandDefinition is UndoCommandDefinition ||
 	            commandDefinition is RedoCommandDefinition)
@@ -94,20 +94,6 @@ namespace Gemini.Modules.PropertyGrid.ViewModels
             NotifyOfPropertyChange(() => SelectedObject);
         }
 
-        //void ICommandHandler<ResetCommandDefinition>.Update(Command command)
-        //{
-        //    command.Enabled = true;
-        //    command.Checked = true;
-        //}
-
-        //Task ICommandHandler<ResetCommandDefinition>.Run(Command command)
-        //{
-
-        //    return TaskUtility.Completed;
-        //}
-
         #endregion
-
-
     }
 }

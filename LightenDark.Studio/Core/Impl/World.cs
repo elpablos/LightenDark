@@ -18,10 +18,10 @@ namespace LightenDark.Studio.Core.Impl
 
         #region Properties
 
-        public int[] WorldMap { get; private set; }
+        public int[][] WorldMap { get; private set; }
         public short Xpos { get; private set; }
         public short Ypos { get; private set; }
-        public List<string> Statics { get; private set; }
+        public List<StaticModel> Statics { get; private set; }
         public List<string> StaticCodeBooks { get; private set; }
         public List<ArmorCodeBook> Armors { get; private set; }
         public List<JewelCodeBook> Jewels { get; private set; }
@@ -97,10 +97,10 @@ namespace LightenDark.Studio.Core.Impl
 
         private void Game_EventLogin(object sender, Api.Response.ResponseLogin e)
         {
-            WorldMap = e.WorldMap;
             Xpos = e.Xpos;
             Ypos = e.Ypos;
             Statics = e.Statics;
+            WorldMap = e.WorldMap;
         }
 
         #endregion
