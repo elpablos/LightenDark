@@ -12,5 +12,7 @@ namespace LightenDark.Api.Interfaces
         int[][] WorldMap { get; }
 
         List<StaticModel> Statics { get; }
+
+        List<NpcModel> Npcs { get; }
     }
 }

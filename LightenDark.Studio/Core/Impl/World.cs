@@ -2,6 +2,7 @@
 using LightenDark.Api.CodeBooks;
 using LightenDark.Api.Interfaces;
 using LightenDark.Api.Models;
+using System.Linq;
 
 namespace LightenDark.Studio.Core.Impl
 {
@@ -30,6 +31,7 @@ namespace LightenDark.Studio.Core.Impl
         public List<WeaponCodeBook> Weapons { get; private set; }
         public List<string> OrphanItems { get; private set; }
         public List<PlayerGraveModel> PlayerGraves { get; private set; }
+        public List<NpcModel> Npcs { get; private set; }
 
         #endregion
 
@@ -46,6 +48,9 @@ namespace LightenDark.Studio.Core.Impl
             game.EventMobData += Game_EventMobData;
             game.EventMapData += Game_EventMapData;
             game.EventNpcData += Game_EventNpcData;
+
+            Npcs = new List<NpcModel>();
+            Statics = new List<StaticModel>();
         }
 
         #endregion
@@ -54,12 +59,31 @@ namespace LightenDark.Studio.Core.Impl
 
         private void Game_EventNpcData(object sender, Api.Response.ResponseNpcData e)
         {
-            // e.
+            if (e.RemoveFromList == 1)
+            {
+                var npc = Npcs.FirstOrDefault(x => x.ID == e.ID);
+                if (npc != null)
+                {
+                    Npcs.Remove(npc);
+                }
+            }
+            else
+            {
+                var npc = new NpcModel();
+                npc.ID = e.ID;
+                npc.DisplayName = e.DisplayName;
+                npc.Level = e.Level;
+                npc.Type = e.Type;
+                npc.XPos = e.XPos;
+                npc.YPos = e.YPos;
+
+                Npcs.Add(npc);
+            }
         }
 
         private void Game_EventMapData(object sender, Api.Response.ResponseMapData e)
         {
-            Statics = e.Statics;
+            Statics.AddRange(e.Statics);
             Xpos = e.Xpos;
             Ypos = e.Ypos;
             OrphanItems = e.OrphanItems;
@@ -99,8 +123,8 @@ namespace LightenDark.Studio.Core.Impl
         {
             Xpos = e.Xpos;
             Ypos = e.Ypos;
-            Statics = e.Statics;
             WorldMap = e.WorldMap;
+            Statics.AddRange(e.Statics);
         }
 
         #endregion

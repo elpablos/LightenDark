@@ -32,10 +32,432 @@ namespace GeminiTester.Scripts
     {
         private const int MOVEMENT_TIMEOUT = 2000;
 
+        private const int GARTHER_TIMEOUT = 60000;
+
         /// <summary>
         /// Name of script
         /// </summary>
-        public override string DisplayName { get { return "TestScript"; } }
+        public override string DisplayName { get { return "Garther script"; } }
+
+        /// <summary>
+        /// Main loop
+        /// </summary>
+        protected override async Task Run()
+        {
+            // definice 
+            int xStart = 90;
+            int yStart = 65;
+
+            int xEnd = 130;
+            int yEnd = 92;
+
+            bool canHarvestHerb = true;
+            bool canFishing = true;
+            bool canLumberJacking = true;
+
+            //// init
+            DateTime start = DateTime.Now;
+
+            #region grid map
+
+            // init grid
+            NodePool nodePool = new NodePool();
+
+            for (int x = xStart; x < xEnd; x++)
+            {
+                for (int y = yStart; y < yEnd; y++)
+                {
+                    int type = Game.World.WorldMap[x][y];
+                    // neni vodda nebo skala
+                    if (type != 2 && type != 3)
+                    {
+                        // set walkable
+                        nodePool.SetNode(x, y, true);
+                    }
+                }
+            }
+
+            // vytahnu prekazky v okoli
+            var statics = Game.World.Statics.Where
+            (s =>
+                (s.Xpos >= xStart)
+                && (s.Xpos < xEnd)
+                && (s.Ypos >= yStart)
+                && (s.Ypos < yEnd)
+                && s.TypeId != 7 // vstup do jeskyne
+                && s.TypeId != 8 // vstup do jeskyne
+                && s.TypeId != 30 // kameni na zemi
+                && s.TypeId != 31 // kameni na zemi
+                && s.TypeId != 37 // kameni na zemi
+                && s.TypeId != 38 // kameni na zemi
+                && s.TypeId != 39 // kameni na zemi
+                && s.TypeId != 40 // kameni na zemi
+                && s.TypeId != 55 // ker
+                && s.TypeId != 56 // ker
+                && s.TypeId != 62 // maly ohen
+                && s.TypeId != 70 // kyticky (herb)
+                && s.TypeId != 71 // kyticky (herb)
+                && s.TypeId != 72 // kyticky (herb)
+            );
+
+            // 124:84 - prekazka!
+
+            // 126:78:22 - strom (nelze tezit)
+            // 123:81:24 - mech(nelze tezit)
+            // 119:79:33 - kamen(nelze tezit)
+            foreach (var st in statics)
+            {
+                // set walkable
+                nodePool.SetNode(st.Xpos, st.Ypos, false);
+            }
+
+            // npc
+            foreach (var npc in Game.World.Npcs)
+            {
+                // set walkable
+                nodePool.SetNode(npc.XPos, npc.YPos, false);
+            }
+
+            // grid
+            BaseGrid searchGrid = new PartialGridWPool(nodePool, new GridRect(xStart, yStart, xEnd, yEnd));
+
+            // nechodit pres rohy + heuristika EUCLIDEAN
+            JumpPointParam jpParam = new JumpPointParam(searchGrid, false, false, false, HeuristicMode.EUCLIDEAN);
+
+            #endregion
+
+            var gartherFullList = new List<GartherPoint>();
+            List<GartherPoint> gartheringList = null;
+
+            #region Herbs
+
+            // vytahnu prekazky v okoli
+            var herbs = Game.World.Statics.Where
+            (s =>
+                (s.Xpos >= xStart)
+                && (s.Xpos < xEnd)
+                && (s.Ypos >= yStart)
+                && (s.Ypos < yEnd)
+                && (s.TypeId == 70 // kyticky (herb)
+                    || s.TypeId == 71 // kyticky (herb)
+                    || s.TypeId == 72 // kyticky (herb)
+                )
+            );
+
+            // kyticky
+            if (canHarvestHerb)
+            {
+                foreach (var herb in herbs)
+                {
+                    var point = new GartherPoint();
+                    point.X = herb.Xpos;
+                    point.Y = herb.Ypos;
+                    point.Type = GartheringType.Harvest;
+
+                    gartherFullList.Add(point);
+                }
+            }
+
+            #endregion
+
+            #region Fishing
+
+            // rybicky
+            if (canFishing)
+            {
+                for (int x = searchGrid.gridRect.minX; x <= searchGrid.gridRect.maxX; x++)
+                {
+                    for (int y = searchGrid.gridRect.minY; y <= searchGrid.gridRect.maxY; y++)
+                    {
+                        // pouze pokud tam lze vlézt
+                        if (searchGrid.IsWalkableAt(x, y))
+                        {
+                            // zajimava mista pro fishing (voda ne nejaky strane)
+                            if ((Game.World.WorldMap[(x + 1)][y] == 2
+                                || Game.World.WorldMap[x][y + 1] == 2
+                                || Game.World.WorldMap[x - 1][y] == 2
+                                || Game.World.WorldMap[x][y - 1] == 2
+                                ))
+                            {
+                                var point = new GartherPoint();
+                                point.X = x;
+                                point.Y = y;
+                                point.Type = GartheringType.Fishing;
+                                gartherFullList.Add(point);
+                            }
+                        }
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Lumber
+
+            if (canLumberJacking)
+            {
+                // vytahnu prekazky v okoli
+                var trees = Game.World.Statics.Where
+                (s =>
+                    (s.Xpos >= xStart)
+                    && (s.Xpos < xEnd)
+                    && (s.Ypos >= yStart)
+                    && (s.Ypos < yEnd)
+                    && (s.TypeId == 20 // strom
+                        || s.TypeId == 25 // fruity 
+                    )
+                );
+
+                GridPos pos;
+                GridPos startPos = new GridPos(Game.Player.Xpos, Game.Player.Ypos);
+
+                foreach (var tree in trees)
+                {
+                    // +1, 0
+                    pos = new GridPos(tree.Xpos + 1, tree.Ypos);
+                    if (searchGrid.IsWalkableAt(pos))
+                    {
+                        jpParam.Reset(startPos, pos);
+                        // find specific points in path
+                        List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+                        if (resultPathList.Count != 0)
+                        {
+                            var point = new GartherPoint();
+                            point.X = pos.x;
+                            point.Y = pos.y;
+                            point.Type = GartheringType.Lumber;
+                            gartherFullList.Add(point);
+
+                            continue;
+                        }
+                    }
+                    // -1, 0
+                    pos = new GridPos(tree.Xpos - 1, tree.Ypos);
+                    if (searchGrid.IsWalkableAt(pos))
+                    {
+                        jpParam.Reset(startPos, pos);
+                        // find specific points in path
+                        List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+                        if (resultPathList.Count != 0)
+                        {
+                            var point = new GartherPoint();
+                            point.X = pos.x;
+                            point.Y = pos.y;
+                            point.Type = GartheringType.Lumber;
+                            gartherFullList.Add(point);
+
+                            continue;
+                        }
+                    }
+                    // 0, +1
+                    pos = new GridPos(tree.Xpos, tree.Ypos + 1);
+                    if (searchGrid.IsWalkableAt(pos))
+                    {
+                        jpParam.Reset(startPos, pos);
+                        // find specific points in path
+                        List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+                        if (resultPathList.Count != 0)
+                        {
+                            var point = new GartherPoint();
+                            point.X = pos.x;
+                            point.Y = pos.y;
+                            point.Type = GartheringType.Lumber;
+                            gartherFullList.Add(point);
+
+                            continue;
+                        }
+                    }
+                    // 0, -1
+                    pos = new GridPos(tree.Xpos, tree.Ypos - 1);
+                    if (searchGrid.IsWalkableAt(pos))
+                    {
+                        jpParam.Reset(startPos, pos);
+                        // find specific points in path
+                        List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+                        if (resultPathList.Count != 0)
+                        {
+                            var point = new GartherPoint();
+                            point.X = pos.x;
+                            point.Y = pos.y;
+                            point.Type = GartheringType.Lumber;
+                            gartherFullList.Add(point);
+
+                            continue;
+                        }
+                    }
+                }
+            }
+
+
+
+            #endregion
+
+            #region Garther
+
+            Game.OutputWrite("interestingPoints " + gartherFullList.Count);
+
+            while (run && gartherFullList.Count > 0)
+            {
+                gartheringList = new List<GartherPoint>(gartherFullList);
+                GartherPoint next = null;
+                while (run && gartheringList.Count > 0)
+                {
+                    // serazeni dle blizkosti k postave
+                    int playerX = Game.Player.Xpos;
+                    int playerY = Game.Player.Ypos;
+                    var manhattan = new Func<GartherPoint, int>((p) => { return Math.Abs(p.X - playerX) + Math.Abs(p.Y - playerY); });
+                    next = gartheringList.OrderBy(manhattan).FirstOrDefault();
+
+                    var point = new GridPos(next.X, next.Y);
+                    Game.OutputWrite(string.Format("{2} [{0}:{1}]", point.x, point.y, next.Type));
+                    // declare start and end
+                    GridPos startPos = new GridPos(Game.Player.Xpos, Game.Player.Ypos);
+
+                    jpParam.Reset(startPos, point);
+
+                    // find specific points in path
+                    List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
+
+                    // nelze tam dojit
+                    if (resultPathList.Count != 0)
+                    {
+                        // get full path
+                        var fullPath = JumpPointFinder.GetFullPath(resultPathList);
+
+                        ResponseChatMessage msg = null;
+
+                        try
+                        {
+                            foreach (var p in fullPath)
+                            {
+                                await GoToGridPos(p, MOVEMENT_TIMEOUT);
+                            }
+
+                            Game.OutputWrite(string.Format("DO {0}", next.Type));
+
+                            // do fishing
+                            if (next.Type == GartheringType.Fishing)
+                            {
+                                Game.Player.Garthering(next.Type);
+                                // zachyceni textove zpravy z chatu
+                                do
+                                {
+                                    msg = await Game.ResponseWaitBase<ResponseChatMessage>(() => { }, null, "EventChatMessage", GARTHER_TIMEOUT);
+                                } while (run && !msg.Messages.Any(m => m.Message.Contains("There are no more fish nearby")));
+                            }
+                            // do harvest
+                            else if (next.Type == GartheringType.Harvest)
+                            {
+                                Game.Player.Garthering(next.Type);
+                                // zachyceni textove zpravy z chatu
+                                do
+                                {
+                                    msg = await Game.ResponseWaitBase<ResponseChatMessage>(() => { }, null, "EventChatMessage", GARTHER_TIMEOUT);
+                                } while (run && !msg.Messages.Any(m => m.Message.Contains("There are no more useful flowers remaining")));
+                            }
+                            // do harvest
+                            else if (next.Type == GartheringType.Mining)
+                            {
+                                Game.Player.Garthering(next.Type);
+                                // zachyceni textove zpravy z chatu
+                                do
+                                {
+                                    msg = await Game.ResponseWaitBase<ResponseChatMessage>(() => { }, null, "EventChatMessage", GARTHER_TIMEOUT);
+                                } while (run && !msg.Messages.Any(m => m.Message.Contains("Ore in this location is depleted")));
+                            }
+                            // do lumberjacking
+                            else if (next.Type == GartheringType.Lumber)
+                            {
+                                Game.Player.Garthering(next.Type);
+                                // zachyceni textove zpravy z chatu
+                                do
+                                {
+                                    msg = await Game.ResponseWaitBase<ResponseChatMessage>(() => { }, null, "EventChatMessage", GARTHER_TIMEOUT);
+                                } while (run && !msg.Messages.Any(m => m.Message.Contains("Surrounding woods are depleted")));
+                            }
+                      
+                            // SHOW BUBBLE
+                            // Game.ShowBubble("Nadpis", "text");
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            Game.OutputWrite("TIMEOUT");
+                        }
+                    }
+                    else
+                    {
+                        Game.OutputWrite("SKIP - way not found");
+                    }
+
+                    await Task.Delay(1000);
+                    gartheringList.Remove(next);
+                }
+            }
+
+            #endregion
+
+            LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);
+        }
+
+        /// <summary>
+        /// Pohyb
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        protected async Task GoToGridPos(GridPos p, int timeout)
+        {
+            // korekce
+            GridPos point = p;
+
+            while (run && (Game.Player.Xpos != point.x))
+            {
+                if (Game.Player.Xpos > point.x)
+                {
+                    await Game.Player.MoveLeftAsync(timeout);
+                }
+                else
+                {
+                    await Game.Player.MoveRightAsync(timeout);
+                }
+                await Task.Delay(200);
+            }
+
+            while (run && (Game.Player.Ypos != point.y))
+            {
+                if (Game.Player.Ypos > point.y)
+                {
+                    await Game.Player.MoveUpAsync(timeout);
+                }
+                else
+                {
+                    await Game.Player.MoveDownAsync(timeout);
+                }
+                await Task.Delay(200);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class GartherPoint
+    {
+        public GartheringType Type { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+    /// <summary>
+    /// Prodej rukavic
+    /// </summary>
+    public class SellScript : ScriptBase
+    {
+
+        /// <summary>
+        /// Name of script
+        /// </summary>
+        public override string DisplayName { get { return "SellScript"; } }
 
         /// <summary>
         /// Main loop
@@ -44,155 +466,79 @@ namespace GeminiTester.Scripts
         {
             //// init
             DateTime start = DateTime.Now;
-            ////await Game.Player.CastSpellAsync(Game.Player.ID, 0, (int)SpellType.CreateFood);
-            //Game.Player.MoveUpAsync().Wait();
-            //LogMessage("Up finished");
-            //Game.Player.MoveRightAsync().Wait();
-            //LogMessage("Right finished");
-            //Game.Player.MoveDownAsync().Wait();
-            //LogMessage("Down finished");
-            //Game.Player.MoveLeftAsync().Wait();
-            //LogMessage("Left finished");
 
-            //var gloves = Game.Player.Inventory.Armors.Where(a => a.ArmorTypeID == 203);
-            //if (gloves != null && gloves.Count() > 0)
-            //{
-            //    LogMessage("Gloves " + gloves.Count());
-
-            //    var ids = gloves.Select(g => g.ID).ToArray();
-            //    foreach (var id in ids)
-            //    {
-            //        string js = string.Format("ws.send('{{\"type\":88,\"itemCode\":10203,\"npcId\":2,\"id\":{0}}}');", id);
-            //        Game.SendJavaScript(js);
-            //        await Task.Delay(1000);
-            //    }
-            //}
-
-            int square = 10;
-
-            int xOffset = 120;
-            int yOffset = 80;
-
-            List<GridPos> interestingPoints = new List<GridPos>();
-
-            // init grid
-            BaseGrid searchGrid = new StaticGrid(square, square);
-
-            for (int x = 0; x < square; x++)
+            var gloves = Game.Player.Inventory.Armors.Where(a => a.ArmorTypeID == 203);
+            if (gloves != null && gloves.Count() > 0)
             {
-                for (int y = 0; y < square; y++)
+                LogMessage("Gloves " + gloves.Count());
+
+                var ids = gloves.Select(g => g.ID).ToArray();
+                foreach (var id in ids)
                 {
-                    int type = Game.World.WorldMap[(x + xOffset)][(y + yOffset)];
-
-                    // 2 - voda, 5 - jeskyne
-                    if (type >= 1 && type <= 5 && type != 2)
-                    {
-                        // set walkable
-                        searchGrid.SetWalkableAt(x, y, true);
-
-                        // zajimava mista pro fishing (voda ne nejaky strane
-                        if (Game.World.WorldMap[(x + xOffset + 1)][y + yOffset] == 2
-                            || Game.World.WorldMap[x + xOffset][y + yOffset + 1] == 2
-                            || Game.World.WorldMap[x + xOffset - 1][y + yOffset] == 2
-                            || Game.World.WorldMap[x + xOffset][y + yOffset -1] == 2
-                            )
-                        {
-                            interestingPoints.Add(new GridPos(x, y));
-                        }
-                    }
+                    string js = string.Format("ws.send('{{\"type\":88,\"itemCode\":10203,\"npcId\":2,\"id\":{0}}}');", id);
+                    Game.SendJavaScript(js);
+                    await Task.Delay(1000);
                 }
             }
+        }
+    }
 
-            var statics = Game.World.Statics.Where
-            (s =>
-                (s.Xpos >= xOffset)
-                && (s.Xpos < xOffset + square)
-                && (s.Ypos >= yOffset)
-                && (s.Ypos < yOffset + square)
-            );
+    /// <summary>
+    /// Pohyb v kruhu
+    /// </summary>
+    public class MovementScript : ScriptBase
+    {
+        private const int MOVEMENT_TIMEOUT = 2000;
 
-            // 126:78:22 - strom (nelze tezit)
-            // 123:81:24 - mech(nelze tezit)
-            // 119:79:33 - kamen(nelze tezit)
-            foreach (var st in statics)
-            {
-                // set walkable
-                searchGrid.SetWalkableAt(st.Xpos - xOffset, st.Ypos - yOffset, false);
-            }
+        /// <summary>
+        /// Name of script
+        /// </summary>
+        public override string DisplayName { get { return "MovementScript"; } }
 
-            Game.OutputWrite("interestingPoints " + interestingPoints.Count);
-
-            foreach (var interest in interestingPoints)
-            {
-                Game.OutputWrite(string.Format("Interest [{0}:{1}]", interest.x, interest.y));
-                // declare start and end
-                GridPos startPos = new GridPos(Game.Player.Xpos -xOffset, Game.Player.Ypos - yOffset);
-                GridPos endPos = new GridPos(interest.x, interest.y);
-                JumpPointParam jpParam = new JumpPointParam(searchGrid, startPos, endPos, false, true, false);
-
-                // find specific points in path
-                List<GridPos> resultPathList = JumpPointFinder.FindPath(jpParam);
-
-                // nelze tam dojit
-                if (resultPathList.Count == 0)
-                {
-                    Game.OutputWrite("CONTINUE");
-                    continue;
-                }
-
-                // get full path
-                resultPathList = JumpPointFinder.GetFullPath(resultPathList);
-                HashSet<GridPos> uniquePath = new HashSet<GridPos>(resultPathList);
-
-                Game.OutputWrite(string.Format("GOTO [{0}:{1}]", interest.x, interest.y));
-
-                foreach (var point in uniquePath)
-                {
-                    await Move(point, xOffset, yOffset, MOVEMENT_TIMEOUT);
-                }
-
-                // DO ACTION!
-                Game.ShowBubble("Nadpis", "text");
-                await Task.Delay(3000);
-            }
-
+        /// <summary>
+        /// Main loop
+        /// </summary>
+        protected override async Task Run()
+        {
+            //// init
+            DateTime start = DateTime.Now;
 
             // run! :)
 
-            //LogMessage("Start first");
+            LogMessage("Start first");
 
-            //await Game.Player.MoveUpAsync();
-            //if (!run) return;
-            //await Game.Player.MoveUpAsync();
-            //if (!run) return;
-            //await Game.Player.MoveUpAsync();
-            //if (!run) return;
+            await Game.Player.MoveUpAsync();
+            if (!run) return;
+            await Game.Player.MoveUpAsync();
+            if (!run) return;
+            await Game.Player.MoveUpAsync();
+            if (!run) return;
 
-            //LogMessage("Start second");
+            LogMessage("Start second");
 
-            //await Game.Player.MoveRightAsync();
-            //if (!run) return;
-            //await Game.Player.MoveRightAsync();
-            //if (!run) return;
-            //await Game.Player.MoveRightAsync();
-            //if (!run) return;
+            await Game.Player.MoveRightAsync();
+            if (!run) return;
+            await Game.Player.MoveRightAsync();
+            if (!run) return;
+            await Game.Player.MoveRightAsync();
+            if (!run) return;
 
-            //LogMessage("Start third");
+            LogMessage("Start third");
 
-            //await Game.Player.MoveDownAsync();
-            //if (!run) return;
-            //await Game.Player.MoveDownAsync();
-            //if (!run) return;
-            //await Game.Player.MoveDownAsync();
-            //if (!run) return;
+            await Game.Player.MoveDownAsync();
+            if (!run) return;
+            await Game.Player.MoveDownAsync();
+            if (!run) return;
+            await Game.Player.MoveDownAsync();
+            if (!run) return;
 
-            //LogMessage("Start fourth");
+            LogMessage("Start fourth");
 
-            //await Game.Player.MoveLeftAsync();
-            //if (!run) return;
-            //await Game.Player.MoveLeftAsync();
-            //if (!run) return;
-            //await Game.Player.MoveLeftAsync();
+            await Game.Player.MoveLeftAsync();
+            if (!run) return;
+            await Game.Player.MoveLeftAsync();
+            if (!run) return;
+            await Game.Player.MoveLeftAsync();
             if (!run) return;
 
 
@@ -200,224 +546,8 @@ namespace GeminiTester.Scripts
             //// Game.Player.MoveUp();
             LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);
         }
+    }
 
-        protected async Task Move(GridPos point, int xOffset, int yOffset, int timeout)
-        {
-            if ((point.x + xOffset) > Game.Player.Xpos)
-            {
-                await Game.Player.MoveRightAsync(timeout);
-            }
-            else if ((point.x + xOffset) < Game.Player.Xpos)
-            {
-                await Game.Player.MoveLeftAsync(timeout);
-            }
-            else if ((point.y + yOffset) > Game.Player.Ypos)
-            {
-                await Game.Player.MoveDownAsync(timeout);
-            }
-            else if ((point.y + yOffset) < Game.Player.Ypos)
-            {
-                await Game.Player.MoveUpAsync(timeout);
-            }
-        }
-
-
-    //    private async Task<ResponseMovement> MoveDown()
-    //    {
-    //        var tcs = new TaskCompletionSource<ResponseMovement>();
-    //        EventHandler<ResponseMovement> handler = null;
-    //        handler = (s, e) =>
-    //        {
-    //            tcs.SetResult(e);
-    //            Game.EventMovement -= handler;
-    //        };
-
-    //        Game.EventMovement += handler;
-
-    //        await Task.Delay(500);
-    //        Game.Player.MoveDown();
-
-
-    //        return await tcs.Task;
-    //    }
-    //}
-
-    //public class SampleScript : ScriptBase
-    //{
-    //    /// <summary>
-    //    /// Name of script
-    //    /// </summary>
-    //    public override string DisplayName { get { return "SampleScript"; } }
-
-    //    /// <summary>
-    //    /// Main loop
-    //    /// </summary>
-    //    protected override void Run()
-    //    {
-    //        Game.Player.MoveDown();
-    //        Sleep(1000);
-    //        Game.Player.MoveUp();
-    //        Sleep(1000);
-    //        Game.Player.MoveLeft();
-    //        Sleep(1000);
-    //        Game.Player.MoveRight();
-    //        Sleep(1000);
-    //    }
-    //}
-
-    //public class MiningScript : ScriptBase
-    //{
-    //    private Waipoint[] noobDung = new Waipoint[]
-    //    {
-    //        new Waipoint(862,75),
-    //        new Waipoint(862,76),
-    //        new Waipoint(862,76),
-    //        new Waipoint(863,76),
-    //        new Waipoint(864,76),
-    //        new Waipoint(864,75),
-    //        new Waipoint(865,75),
-    //        new Waipoint(865,76),
-    //        new Waipoint(865,77),
-    //        new Waipoint(866,77),
-    //        new Waipoint(866,76),
-    //        new Waipoint(866,75),
-    //        new Waipoint(867,75),
-    //        new Waipoint(867,76),
-    //        new Waipoint(867,77),
-    //        new Waipoint(868,77),
-    //        new Waipoint(868,76),
-    //        new Waipoint(868,75),
-    //        new Waipoint(869,75),
-    //        new Waipoint(869,74),
-    //        new Waipoint(869,76),
-    //        new Waipoint(870,76),
-    //        new Waipoint(870,75),
-    //        new Waipoint(870,74),
-    //        new Waipoint(870,73),
-    //        new Waipoint(870,72),
-    //        new Waipoint(871,72),
-    //        new Waipoint(871,73),
-    //        new Waipoint(871,74),
-    //        new Waipoint(871,75),
-    //        new Waipoint(871,76),
-    //        new Waipoint(871,73),
-    //        new Waipoint(872,73),
-    //        new Waipoint(872,72),
-    //        new Waipoint(872,71),
-    //        new Waipoint(873,72),
-    //        new Waipoint(873,71),
-    //        new Waipoint(874,71),
-    //        // zpet
-    //        new Waipoint(872,71),
-    //        new Waipoint(872,73),
-    //        new Waipoint(870,73),
-    //        new Waipoint(870,73),
-    //        new Waipoint(870,76),
-    //        new Waipoint(862,76),
-    //    };
-
-    //    public Waipoint[] Waipoints { get; set; }
-
-    //    private Waipoint PlayerPosition = new Waipoint(0, 0);
-    //    private JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-    //    public override string DisplayName
-    //    {
-    //        get { return "MiningScript - Internal"; }
-    //    }
-
-    //    public MiningScript()
-    //    {
-    //        Waipoints = noobDung;
-    //        serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
-    //    }
-
-    //    protected override void Game_GameMessage(object sender, GameEventArgs e)
-    //    {
-    //        LogMessage("Type " + e.Message);
-    //        dynamic obj = serializer.Deserialize(e.Message, typeof(object));
-
-    //        // pozice hrace
-    //        if (obj.t == 32)
-    //        {
-    //            PlayerPosition.X = obj.x;
-    //            PlayerPosition.Y = obj.y;
-
-    //            LogMessage("Pos " + PlayerPosition.X + " " + PlayerPosition.Y);
-    //            ReleaseLock();
-    //        }
-    //        else if (obj.t == 63 && e.Message.Contains("Ore in this location is depleted"))
-    //        {
-    //            // vytezeno
-    //            ReleaseLock();
-    //        }
-    //    }
-
-    //    protected override void Run()
-    //    {
-    //        int i = 0;
-    //        while (run)
-    //        {
-    //            if (i == Waipoints.Length) i = 0;
-    //            LogMessage("Waipoint " + i);
-    //            GoToWaypoint(Waipoints[i]);
-
-    //            // tezba
-    //            SendJavascript("ws.send('{\"type\":66,\"gatherType\":1}');");
-    //            WaitLock();
-
-    //            Sleep(1000);
-    //            i++;
-    //        }
-    //    }
-
-    //    protected void GoToWaypoint(Waipoint point)
-    //    {
-    //        while (run && (PlayerPosition.X != point.X))
-    //        {
-    //            if (PlayerPosition.X > point.X)
-    //            {
-    //                SendJavascript("moveLeft();");
-    //            }
-    //            else
-    //            {
-    //                SendJavascript("moveRight();");
-    //            }
-
-    //            WaitLock(2000);
-    //            Sleep(1000);
-    //        }
-
-    //        while (run && (PlayerPosition.Y != point.Y))
-    //        {
-    //            if (PlayerPosition.Y > point.Y)
-    //            {
-    //                SendJavascript("moveUp();");
-    //            }
-    //            else
-    //            {
-    //                SendJavascript("moveDown();");
-    //            }
-
-    //            WaitLock(2000);
-    //            Sleep(1000);
-    //        }
-    //    }
-    //}
-
-    //public class Waipoint
-    //{
-    //    public int X { get; set; }
-
-    //    public int Y { get; set; }
-
-    //    public Waipoint(int x, int y)
-    //    {
-    //        X = x;
-    //        Y = y;
-    //    }
-    //}
-}
 #endif
 
 }

@@ -107,6 +107,7 @@
     <Compile Include="Models\JewelModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\MonsterSpawnModel.cs" />
+    <Compile Include="Models\NpcModel.cs" />
     <Compile Include="Models\PlayerGraveModel.cs" />
     <Compile Include="Models\SpellCastModel.cs" />
     <Compile Include="Models\StaticModel.cs" />
