@@ -23,6 +23,9 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViews
 
             //initialize NotifyIcon
             TaskbarIcon = (TaskbarIcon)((App)System.Windows.Application.Current).FindResource("NotifyIcon");
+
+            // game URL
+            browser.Address = Properties.Settings.Default.GameUrl;
         }
     }
 }

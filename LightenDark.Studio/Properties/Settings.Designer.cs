@@ -34,5 +34,17 @@ namespace LightenDark.Studio.Properties {
                 this["ConfirmExit"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://darkenlight.net/pages/game.xhtml")]
+        public string GameUrl {
+            get {
+                return ((string)(this["GameUrl"]));
+            }
+            set {
+                this["GameUrl"] = value;
+            }
+        }
     }
 }

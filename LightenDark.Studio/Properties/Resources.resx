@@ -120,6 +120,9 @@
   <data name="ApplicationSettings_ConfirmExit_Text" xml:space="preserve">
     <value>Confirm application exit</value>
   </data>
+  <data name="ApplicationSettings_GameUrl_Text" xml:space="preserve">
+    <value>Game url</value>
+  </data>
   <data name="CloseDialog_Message" xml:space="preserve">
     <value>Are you sure you want to exit?</value>
   </data>

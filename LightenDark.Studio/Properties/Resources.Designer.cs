@@ -70,6 +70,15 @@ namespace LightenDark.Studio.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game url.
+        /// </summary>
+        public static string ApplicationSettings_GameUrl_Text {
+            get {
+                return ResourceManager.GetString("ApplicationSettings_GameUrl_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to exit?.
         /// </summary>
         public static string CloseDialog_Message {

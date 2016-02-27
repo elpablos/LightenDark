@@ -18,10 +18,12 @@ namespace LightenDark.Studio.Module.Shell.ViewModels
     public class ApplicationSettingsViewModel : PropertyChangedBase, ISettingsEditor
     {
         private bool _confirmExit;
+        private string _gameUrl;
 
         public ApplicationSettingsViewModel()
         {
             ConfirmExit = Settings.Default.ConfirmExit;
+            GameUrl = Settings.Default.GameUrl;
         }
 
         public bool ConfirmExit
@@ -32,6 +34,17 @@ namespace LightenDark.Studio.Module.Shell.ViewModels
                 if (value.Equals(_confirmExit)) return;
                 _confirmExit = value;
                 NotifyOfPropertyChange(() => ConfirmExit);
+            }
+        }
+
+        public string GameUrl
+        {
+            get { return _gameUrl; }
+            set
+            {
+                if (value.Equals(_gameUrl)) return;
+                _gameUrl = value;
+                NotifyOfPropertyChange(() => GameUrl);
             }
         }
 
@@ -47,12 +60,16 @@ namespace LightenDark.Studio.Module.Shell.ViewModels
 
         public void ApplyChanges()
         {
-            if (ConfirmExit == Settings.Default.ConfirmExit)
+            if (ConfirmExit == Settings.Default.ConfirmExit
+                || GameUrl == Settings.Default.GameUrl)
             {
                 return;
             }
 
+            Settings.Default.GameUrl = GameUrl;
             Settings.Default.ConfirmExit = ConfirmExit;
+
+            // save
             Settings.Default.Save();
         }
     }

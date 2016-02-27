@@ -10,7 +10,6 @@
     <Grid>
         <cef:ChromiumWebBrowser x:Name="browser" Grid.Row="0"
             WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"
-            Title="{Binding Title, Mode=TwoWay}" 
-            Address="http://darkenlight.net:8082/pages/game.xhtml"/>
+            Title="{Binding Title, Mode=TwoWay}" />
     </Grid>
 </UserControl>
