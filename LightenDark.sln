@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightenDark.Module.Console"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gemini.Modules.PropertyGrid", "Gemini\Gemini.Modules.PropertyGrid\Gemini.Modules.PropertyGrid.csproj", "{8080CB9A-9389-4B4D-9ADF-BEF7FEFCAC55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{FE256AB6-39E6-4292-BF55-945237EAF054}"
+	ProjectSection(SolutionItems) = preProject
+		LightenDark.Studio\LightenDark_x64.iss = LightenDark.Studio\LightenDark_x64.iss
+		LightenDark.Studio\LightenDark_x86.iss = LightenDark.Studio\LightenDark_x86.iss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
