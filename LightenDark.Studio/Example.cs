@@ -26,13 +26,14 @@ namespace GeminiTester.Scripts
     /// 6 - wasteland
     /// 7 - vulcanic
     /// 8 - podzemi
-    /// 
     /// </summary>
     public class TestScript : ScriptBase
     {
         private const int MOVEMENT_TIMEOUT = 2000;
 
         private const int GARTHER_TIMEOUT = 60000;
+
+        private NodePool nodePool = null;
 
         /// <summary>
         /// Name of script
@@ -61,7 +62,7 @@ namespace GeminiTester.Scripts
             #region grid map
 
             // init grid
-            NodePool nodePool = new NodePool();
+            nodePool = new NodePool();
 
             for (int x = xStart; x < xEnd; x++)
             {
@@ -117,6 +118,9 @@ namespace GeminiTester.Scripts
                 // set walkable
                 nodePool.SetNode(npc.XPos, npc.YPos, false);
             }
+
+            // dynamicke pridavani NPC do mapy
+            Game.EventNpcData += Game_EventNpcData;
 
             // grid
             BaseGrid searchGrid = new PartialGridWPool(nodePool, new GridRect(xStart, yStart, xEnd, yEnd));
@@ -375,7 +379,7 @@ namespace GeminiTester.Scripts
                                     msg = await Game.ResponseWaitBase<ResponseChatMessage>(() => { }, null, "EventChatMessage", GARTHER_TIMEOUT);
                                 } while (run && !msg.Messages.Any(m => m.Message.Contains("Surrounding woods are depleted")));
                             }
-                      
+
                             // SHOW BUBBLE
                             // Game.ShowBubble("Nadpis", "text");
                         }
@@ -397,6 +401,22 @@ namespace GeminiTester.Scripts
             #endregion
 
             LogMessage("Casting time " + DateTime.Now.Subtract(start).TotalMilliseconds);
+        }
+
+        protected override void BeforeStop()
+        {
+            Game.EventNpcData -= Game_EventNpcData;
+
+            base.BeforeStop();
+        }
+
+        private void Game_EventNpcData(object sender, ResponseNpcData e)
+        {
+           if (nodePool != null && e.RemoveFromList != 1)
+            {
+                // set walkable
+                nodePool.SetNode(e.XPos, e.YPos, false);
+            }
         }
 
         /// <summary>
