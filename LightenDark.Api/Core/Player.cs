@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LightenDark.Studio.Core.Impl
+namespace LightenDark.Api.Core
 {
     /// <summary>
     /// Implementace objektu reprezentujici hrace
@@ -21,7 +21,7 @@ namespace LightenDark.Studio.Core.Impl
     {
         #region Fields
 
-        private Game game;
+        private IGame game;
 
         #endregion
 
@@ -83,21 +83,35 @@ namespace LightenDark.Studio.Core.Impl
 
         public TileTypes TileType { get; private set; }
 
+        [Import]
+        public IGame Game
+        {
+            get { return game; }
+            set
+            {
+                game = value;
+                if (game != null)
+                {
+                    GameBounded();
+                }
+            }
+        }
+
+        private void GameBounded()
+        {
+            Game.EventLogin += Game_EventLogin;
+            Game.EventCharacterData += Game_EventCharacterData;
+            Game.EventCharacterHpMpChanged += Game_EventCharacterHpMpChanged;
+            Game.EventItemDamaged += Game_EventItemDamaged;
+            Game.EventInventoryChanged += Game_EventInventoryChanged;
+            Game.EventSkillSetChanged += Game_EventSkillSetChanged;
+            Game.EventMovement += Game_EventMovement;
+        }
+
         #endregion
 
         #region Constructor
 
-        public Player(Game game)
-        {
-            this.game = game;
-            game.EventLogin += Game_EventLogin;
-            game.EventCharacterData += Game_EventCharacterData;
-            game.EventCharacterHpMpChanged += Game_EventCharacterHpMpChanged;
-            game.EventItemDamaged += Game_EventItemDamaged;
-            game.EventInventoryChanged += Game_EventInventoryChanged;
-            game.EventSkillSetChanged += Game_EventSkillSetChanged;
-            game.EventMovement += Game_EventMovement;
-        }
 
         #endregion
 
@@ -123,9 +137,9 @@ namespace LightenDark.Studio.Core.Impl
         private void Game_EventInventoryChanged(object sender, Api.Response.ResponseInventoryChanged e)
         {
             if (e.ArmorAdded != null)
-            Inventory.Armors.AddRange(e.ArmorAdded);
+                Inventory.Armors.AddRange(e.ArmorAdded);
             if (e.ArmorRemoved != null)
-            Inventory.Armors.RemoveAll(x => e.ArmorRemoved.Contains(x));
+                Inventory.Armors.RemoveAll(x => e.ArmorRemoved.Contains(x));
 
             if (e.WeaponAdded != null)
                 Inventory.Weapons.AddRange(e.WeaponAdded);
@@ -357,7 +371,7 @@ namespace LightenDark.Studio.Core.Impl
                 async (s, e) =>
                 {
                     // wait for casting time
-                    await Task.Delay((int)e.CastingTime, game.CancelToken);
+                    await Task.Delay((int)e.CastingTime, game.CancelTokenSource.Token);
                 }, "EventCastSpell", timeout);
         }
 

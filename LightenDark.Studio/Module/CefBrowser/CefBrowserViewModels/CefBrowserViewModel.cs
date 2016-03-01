@@ -7,9 +7,10 @@ using Gemini.Framework.Threading;
 using Gemini.Modules.ErrorList;
 using Gemini.Modules.Output;
 using Hardcodet.Wpf.TaskbarNotification;
+using LightenDark.Api.Args;
+using LightenDark.Api.Interfaces;
 using LightenDark.Module.Console;
 using LightenDark.Studio.Module.CefBrowser.Commands;
-using LightenDark.Studio.Module.CefBrowser.Handlers;
 using LightenDark.Studio.Module.ScriptManager;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,9 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         ICommandHandler<BrowserReloadItemDefinition>,
         ICommandHandler<BrowserSourceCodeItemDefinition>,
         ICommandHandler<BrowserDeveloperToolItemDefition>,
-        Caliburn.Micro.IHandle<NotifyIconMessage>
+        IHandle<NotifyIconEventArgs>,
+        IHandle<JavaScriptAsyncEventArgs>,
+        IHandle<OutputEventArgs>
     {
         #region Fields
 
@@ -64,15 +67,18 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 
         public IEventAggregator EventAggregator { get; set; }
 
+        public IBoundClass BoundClass { get; set; }
+
         #endregion
 
         #region Constructor
 
         [ImportingConstructor]
-        public CefBrowserViewModel(IEventAggregator aggregator)
+        public CefBrowserViewModel(IEventAggregator aggregator, IBoundClass boundClass)
         {
             DisplayName = "Game";
             EventAggregator = aggregator;
+            BoundClass = boundClass;
             aggregator.Subscribe(this);
         }
 
@@ -148,6 +154,20 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
             webBrowser.ConsoleMessage += OnWebBrowserConsoleMessage;
             // chyby WebBrowseru
             webBrowser.LoadError += OnWebBrowserLoadError;
+
+            BoundClass.BoundMessageHandler += BoundClass_BoundMessageHandler;
+        }
+
+        /// <summary>
+        /// Zápis do konzole
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BoundClass_BoundMessageHandler(object sender, BoundEventArgs e)
+        {
+            ConsoleListItemType type = e.BoundType == Api.Types.BoundType.In 
+                ? ConsoleListItemType.Incoming : ConsoleListItemType.Outgoing;
+            Console.AddItem(type, e.Message);
         }
 
         /// <summary>
@@ -184,7 +204,7 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
                     var browser = webBrowser.GetBrowser();
                     browser.MainFrame.EvaluateScriptAsync(script);
 
-                    Handle(new NotifyIconMessage("ApplicationStart.js", "Javascript file is loaded"));
+                    Handle(new NotifyIconEventArgs("ApplicationStart.js", "Javascript file is loaded"));
 
                     isIncludeLoginBefore = true;
                 }
@@ -208,7 +228,7 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
         /// <param name="e"></param>
         private void OnWebBrowserConsoleMessage(object sender, ConsoleMessageEventArgs e)
         {
-            //LogNewAction(ApplicationMessageType.Console, e.Message);
+            // LogNewAction(ApplicationMessageType.Console, e.Message);
         }
 
         /// <summary>
@@ -274,14 +294,32 @@ namespace LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels
 
         #endregion
 
-        #region INofityIcon
+        #region IHandle<NotifyIconEventArgs>
 
-        public void Handle(NotifyIconMessage message)
+        public void Handle(NotifyIconEventArgs message)
         {
             if (TaskbarIcon != null)
             {
                 TaskbarIcon.ShowBalloonTip(message.Title, message.Message, BalloonIcon.Info);
             }
+        }
+
+        #endregion
+
+        #region IHandle<JavaScriptAsyncEventArgs>
+
+        public void Handle(JavaScriptAsyncEventArgs js)
+        {
+            ExecuteJavaScriptAsync(js.JavaScript);
+        }
+
+        #endregion
+
+        #region IHandle<OutputEventArgs>
+
+        public void Handle(OutputEventArgs arg)
+        {
+            OutputModule.AppendLine(arg.Message);
         }
 
         #endregion

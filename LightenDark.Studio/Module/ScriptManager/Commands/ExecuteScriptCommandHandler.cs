@@ -14,10 +14,10 @@ namespace LightenDark.Studio.Module.ScriptManager.Commands
     public class ExecuteScriptCommandHandler : CommandHandlerBase<ExecuteScriptCommandDefinition>
     {
         [Import]
-        public IGame Game { get; set; }
+        public Gemini.Modules.Output.IOutput Output { get; set; }
 
         [Import]
-        public Gemini.Modules.Output.IOutput Output { get; set; }
+        public IGame Game { get; set; }
 
         [Import]
         public IScriptManager Manager { get; set; }

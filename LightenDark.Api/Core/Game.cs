@@ -1,14 +1,9 @@
 ﻿using Caliburn.Micro;
-using Gemini.Modules.Output;
-using Gemini.Modules.PropertyGrid;
-using LightenDark.Api;
 using LightenDark.Api.Args;
 using LightenDark.Api.Interfaces;
 using LightenDark.Api.Models;
 using LightenDark.Api.Response;
 using LightenDark.Api.Types;
-using LightenDark.Module.Console;
-using LightenDark.Studio.Module.CefBrowser.CefBrowserViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LightenDark.Studio.Core.Impl
+namespace LightenDark.Api.Core
 {
     /// <summary>
     /// Implementace objektu reprezentujici hru Darkenlight
@@ -30,25 +25,22 @@ namespace LightenDark.Studio.Core.Impl
     {
         #region Properties
 
+        [Import]
         public IPlayer Player { get; set; }
 
+        [Import]
         public IWorld World { get; set; }
 
-        [Import]
-        public IOutput Output { get; set; }
+        private IBoundClass boundClass;
 
         [Import]
-        public IBoundClass BoundClass { get; set; }
-
-        private ICefBrowserViewModel browser;
-        [Import]
-        public ICefBrowserViewModel Browser
+        public IBoundClass BoundClass
         {
-            get { return browser; }
+            get { return boundClass; }
             set
             {
-                browser = value;
-                if (Browser != null) OnBrowserBound();
+                boundClass = value;
+                if (boundClass != null) OnBrowserBound();
             }
         }
 
@@ -119,14 +111,10 @@ namespace LightenDark.Studio.Core.Impl
 
         #region Constructor
 
-        [ImportingConstructor]
-        public Game(IPropertyGrid propertyGrid)
-        {
-            propertyGrid.SelectedObject = this;
-            propertyGrid.Activate();
-            Player = new Player(this);
-            World = new World(this);
-        }
+        //[ImportingConstructor]
+        //public Game()
+        //{
+        //}
 
         #endregion
 
@@ -369,20 +357,20 @@ namespace LightenDark.Studio.Core.Impl
 
         #region Public methods
 
-        public void SendJavaScript(string message)
+        public async void SendJavaScript(string js)
         {
-            OutputWrite("JS: " + message);
-            Browser.ExecuteJavaScriptAsync(message);
+            OutputWrite("JS: " + js);
+            await EventAggregator.PublishOnUIThreadAsync(new JavaScriptAsyncEventArgs(js));
         }
 
-        public void OutputWrite(string message)
+        public async void OutputWrite(string message)
         {
-            Output.AppendLine(message);
+            await EventAggregator.PublishOnUIThreadAsync(new OutputEventArgs(message));
         }
 
-        public void ShowBubble(string title, string message)
+        public async void ShowBubble(string title, string message)
         {
-            EventAggregator.PublishOnUIThread(new Module.CefBrowser.Handlers.NotifyIconMessage(title, message));
+            await EventAggregator.PublishOnUIThreadAsync(new NotifyIconEventArgs(title, message));
         }
 
         #endregion

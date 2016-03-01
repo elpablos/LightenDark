@@ -208,10 +208,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BoundClass.cs" />
-    <Compile Include="Core\Impl\Game.cs" />
-    <Compile Include="Core\Impl\Player.cs" />
-    <Compile Include="Core\Impl\World.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="Module\CefBrowser\CefBrowserViewModels\CefBrowserViewModel.cs" />
     <Compile Include="Module\CefBrowser\CefBrowserViewModels\ICefBrowserViewModel.cs" />
@@ -221,7 +217,6 @@
     <Compile Include="Module\CefBrowser\Commands\BrowserDeveloperToolItemDefition.cs" />
     <Compile Include="Module\CefBrowser\Commands\BrowserReloadItemDefinition.cs" />
     <Compile Include="Module\CefBrowser\Commands\BrowserSourceCodeItemDefinition.cs" />
-    <Compile Include="Module\CefBrowser\Handlers\INotifyIconHandle.cs" />
     <Compile Include="Module\CefBrowser\MenuDefinitions.cs" />
     <Compile Include="Module\CefBrowser\Module.cs" />
     <Compile Include="Module\ScriptManager\Commands\CompileScriptCommandDefinition.cs" />

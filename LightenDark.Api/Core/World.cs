@@ -3,17 +3,20 @@ using LightenDark.Api.CodeBooks;
 using LightenDark.Api.Interfaces;
 using LightenDark.Api.Models;
 using System.Linq;
+using System.ComponentModel.Composition;
+using System;
 
-namespace LightenDark.Studio.Core.Impl
+namespace LightenDark.Api.Core
 {
     /// <summary>
     /// Implementace objektu reprezentujici svet DarkenLight
     /// </summary>
+    [Export(typeof(IWorld))]
     public class World : IWorld
     {
         #region Fields
 
-        private Game game;
+        private IGame game;
 
         #endregion
 
@@ -33,22 +36,38 @@ namespace LightenDark.Studio.Core.Impl
         public List<PlayerGraveModel> PlayerGraves { get; private set; }
         public List<NpcModel> Npcs { get; private set; }
 
+        [Import]
+        public IGame Game
+        {
+            get { return game; }
+            set
+            {
+                game = value;
+                if (game != null)
+                {
+                    GameBounded();
+                }
+            }
+        }
+
+        private void GameBounded()
+        {
+            Game.EventLogin += Game_EventLogin;
+            Game.EventMobMove += Game_EventMobMove;
+            Game.EventStaticObjectChange += Game_EventStaticObjectChange;
+            Game.EventMapStaticCodeBook += Game_EventMapStaticCodeBook;
+            Game.EventCodeBook += Game_EventCodeBook;
+            Game.EventMobData += Game_EventMobData;
+            Game.EventMapData += Game_EventMapData;
+            Game.EventNpcData += Game_EventNpcData;
+        }
+
         #endregion
 
         #region Constructors
 
-        public World(Game game)
+        public World()
         {
-            this.game = game;
-            game.EventLogin += Game_EventLogin;
-            game.EventMobMove += Game_EventMobMove;
-            game.EventStaticObjectChange += Game_EventStaticObjectChange;
-            game.EventMapStaticCodeBook += Game_EventMapStaticCodeBook;
-            game.EventCodeBook += Game_EventCodeBook;
-            game.EventMobData += Game_EventMobData;
-            game.EventMapData += Game_EventMapData;
-            game.EventNpcData += Game_EventNpcData;
-
             Npcs = new List<NpcModel>();
             Statics = new List<StaticModel>();
         }

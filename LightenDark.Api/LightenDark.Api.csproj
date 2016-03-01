@@ -66,11 +66,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
@@ -82,12 +87,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Args\BoundEventArgs.cs" />
+    <Compile Include="Args\JavaScriptAsyncEventArgs.cs" />
+    <Compile Include="Args\NotifyIconEventArgs.cs" />
+    <Compile Include="Args\OutputEventArgs.cs" />
     <Compile Include="CodeBooks\ArmorCodeBook.cs" />
     <Compile Include="Args\GameEventArgs.cs" />
     <Compile Include="CodeBooks\JewelCodeBook.cs" />
     <Compile Include="CodeBooks\MaterialCodeBook.cs" />
     <Compile Include="CodeBooks\MonsterFamilyCodeBook.cs" />
     <Compile Include="CodeBooks\WeaponCodeBook.cs" />
+    <Compile Include="Core\BoundClass.cs" />
+    <Compile Include="Core\Game.cs" />
+    <Compile Include="Core\Player.cs" />
+    <Compile Include="Core\World.cs" />
     <Compile Include="DynamicJsonConverter.cs" />
     <Compile Include="Interfaces\IBoundClass.cs" />
     <Compile Include="Interfaces\IGame.cs" />
@@ -191,7 +203,7 @@
     <Compile Include="Types\TileTypes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\" />
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
