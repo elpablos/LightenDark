@@ -1,0 +1,15 @@
+| **Herb**     | **Needed Skill** | **Harvested from** | **Chance** | **Item ID** |
+| Blueberry    |   0%             | Glade              | 20%        | 36          |
+| Strawberry   |   5%             | Glade              | 15%        | 37          |
+| Origan       |  10%             | Glade              | 13%        | 38          |
+| Onion        |  15%             | Glade              | 10%        | 39          |
+| Garlic       |  20%             | Glade              |  8%        | 40          |
+| Nightshade   |  25%             | Glade              |  8%        | 41          |
+| Snakeweed    |  40%             | Glade              |  6%        | 42          |
+| Mandrake     |  55%             | Glade              |  6%        | 43          |
+| Mana blossom |  70%             | ??                 |  4%        | 44          |
+| Healer bloom |  85%             | ??                 |  4%        | 45          |
+| Mystic flower|  88%             | ??                 |  2%        | 46          |
+| Dragon leaf  |  94%             | ??                 |  2%        | 47          |
+| Diabolica    | 100%             | ???                |  1%        | 48          |
+| Angelica     | 100%             | ???                |  1%        | 49          |

@@ -1,0 +1,11 @@
+| **Wood**    | **Needed Skill** | **Chance** | **Tree Level** | **Item ID** |
+| Wooden log  |   0%             | 37%        |                | 20          |
+| Oak         |  15%             | 20%        |                | 21          |
+| Cherry      |  30%             | 16%        |                | 22          |
+| Ebony       |  45%             | 12%        |                | 23          |
+| Mahagon     |  60%             | 8%         |                | 24          |
+| Teak        |  75%             | 4%         |                | 25          |
+| Elven       |  90%             | 2%         |                | 26          |
+| Ethereal    | 100%             | 1%         |                | 27          |
+
+* Tree level is not available at the moment

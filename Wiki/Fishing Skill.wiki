@@ -1,0 +1,12 @@
+| **Fish**        | **Needed Skill** | **Chance 1** | **Chance 2** | **Item ID** |
+| Herring         |   0%             | 42%          | 37%          | 28          |
+| Trout           |  15%             | 25%          | 20%          | 29          |
+| Carp            |  30%             | 16%          | 16%          | 30          |
+| Salmon          |  50%             | 8%           | 12%          | 31          |
+| Shark           |  70%             | 4,5%         |  8%          | 32          |
+| Glamour Fish    |  85%             | 2%           |  4%          | 33          |
+| Wonderous Fish  |  95%             | 1%           |  2%          | 34          |
+| Miraculous Fish | 100%             | 0,5%         |  1%          | 35          |
+
+*Chance 1 - Shallow Watter
+*Chance 2 - Deep Watter

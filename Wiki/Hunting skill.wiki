@@ -1,0 +1,18 @@
+| **Leather** | **Needed Skill** | **Chance** | **Min. Mob Level** | **Item ID** |
+| Leather     |   0%             | 42%        | 0                  |             |
+| Wolf        |  20%             | 24%        | 8                  |             |
+| Chameleon   |  35%             | 16%        | 16                 |             |
+| Lizard      |  55%             | 12%        | 24                 |             |
+| Wyrm        |  75%             | 4%         | 32                 |             |
+| Dragon      |  95%             | 2%         | 40                 |             |
+
+
+
+| **Meat** | **Needed Skill** | **Chance** | **Min. Mob Level** | **Item ID** |
+| Meat     |   0%             | 39%        | 0                  |             |
+| Boar     |  20%             | 25%        | 10                 |             |
+| Buffalo  |  35%             | 15%        | 16                 |             |
+| Turtle   |  50%             | 10%        | 22                 |             |
+| Bear     |  65%             | 6,5%       | 28                 |             |
+| Tiger    |  80%             | 3%         | 34                 |             |
+| Behemont |  95%             | 1,5%       | 40                 |             |
